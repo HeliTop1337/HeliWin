@@ -89,10 +89,9 @@ export default function Inventory() {
 
   const getRarityColor = (rarity: string) => {
     const colors = {
-      COMMON: 'from-gray-500 to-gray-600',
-      UNCOMMON: 'from-green-500 to-green-600',
-      RARE: 'from-blue-500 to-blue-600',
-      EXCEPTIONAL: 'from-purple-500 to-purple-600',
+      STALKER: 'from-blue-500 to-blue-600',
+      VETERAN: 'from-purple-500 to-purple-600',
+      MASTER: 'from-orange-500 to-orange-600',
       LEGENDARY: 'from-yellow-500 to-yellow-600',
     };
     return colors[rarity as keyof typeof colors] || 'from-gray-500 to-gray-600';
@@ -100,11 +99,10 @@ export default function Inventory() {
 
   const getRarityText = (rarity: string) => {
     const texts: Record<string, string> = {
-      COMMON: 'Обычный',
-      UNCOMMON: 'Необычный',
-      RARE: 'Редкий',
-      EXCEPTIONAL: 'Исключительный',
-      LEGENDARY: 'Легендарный',
+      STALKER: 'Сталкерское',
+      VETERAN: 'Ветеранское',
+      MASTER: 'Мастерское',
+      LEGENDARY: 'Легендарное',
     };
     return texts[rarity] || rarity;
   };
@@ -245,7 +243,7 @@ export default function Inventory() {
 
           {/* Filters */}
           <div className="flex gap-2 flex-wrap mb-4">
-            {['ALL', 'Common', 'Uncommon', 'Rare', 'Exceptional', 'Legendary'].map((rarity) => (
+            {['ALL', 'STALKER', 'VETERAN', 'MASTER', 'LEGENDARY'].map((rarity) => (
               <motion.button
                 key={rarity}
                 whileHover={{ scale: 1.05 }}
@@ -343,7 +341,7 @@ export default function Inventory() {
                     }`}
                   >
                     {/* Selection indicator */}
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex justify-start items-start mb-3">
                       <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition ${
                         isSelected 
                           ? 'bg-primary border-primary' 
@@ -355,28 +353,21 @@ export default function Inventory() {
                           </svg>
                         )}
                       </div>
-                      
-                      {/* Rarity badge */}
-                      <div className={`glass px-2 py-1 rounded-lg text-xs font-bold bg-gradient-to-r ${getRarityColor(invItem.item.rarity)} bg-clip-text text-transparent`}>
-                        {getRarityText(invItem.item.rarity).charAt(0)}
-                      </div>
                     </div>
 
                     {/* Item icon */}
-                    <div className={`aspect-square rounded-xl bg-gradient-to-br ${getRarityColor(invItem.item.rarity)} mb-3 flex items-center justify-center relative overflow-hidden`}>
-                      <div className="w-16 h-16 p-2">
-                        {invItem.item.icon ? (
-                          <img 
-                            src={invItem.item.icon} 
-                            alt={invItem.item.name}
-                            className="w-full h-full object-contain"
-                          />
-                        ) : (
-                          <svg className="w-full h-full text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-                          </svg>
-                        )}
-                      </div>
+                    <div className={`aspect-square rounded-xl bg-gradient-to-br ${getRarityColor(invItem.item.rarity)} mb-3 flex items-center justify-center relative overflow-hidden p-4`}>
+                      {invItem.item.icon ? (
+                        <img 
+                          src={invItem.item.icon} 
+                          alt={invItem.item.name}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <svg className="w-full h-full text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                        </svg>
+                      )}
                     </div>
 
                     {/* Item info */}

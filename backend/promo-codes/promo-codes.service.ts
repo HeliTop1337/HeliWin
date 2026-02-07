@@ -110,4 +110,21 @@ export class PromoCodesService {
       return { message, newBalance };
     });
   }
+
+  async getUserPromoHistory(userId: string) {
+    const usages = await this.prisma.promoCodeUsage.findMany({
+      where: { userId },
+      include: {
+        promoCode: true,
+      },
+      orderBy: { usedAt: 'desc' },
+    });
+
+    return usages.map(usage => ({
+      code: usage.promoCode.code,
+      type: usage.promoCode.type,
+      value: usage.promoCode.value,
+      usedAt: usage.usedAt,
+    }));
+  }
 }

@@ -11,6 +11,7 @@ export default function Home() {
   const { isAuthenticated } = useAuthStore();
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [qualityFilter, setQualityFilter] = useState('ALL');
 
   useEffect(() => {
     fetchCases();
@@ -26,6 +27,32 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const getQualityColor = (quality: string) => {
+    const colors: Record<string, string> = {
+      STALKER: 'from-blue-500 to-blue-600',
+      VETERAN: 'from-purple-500 to-purple-600',
+      MASTER: 'from-orange-500 to-orange-600',
+      LEGENDARY: 'from-yellow-500 to-yellow-600',
+    };
+    return colors[quality] || 'from-gray-500 to-gray-600';
+  };
+
+  const getQualityText = (quality: string) => {
+    const texts: Record<string, string> = {
+      STALKER: 'Сталкерское',
+      VETERAN: 'Ветеранское',
+      MASTER: 'Мастерское',
+      LEGENDARY: 'Легендарное',
+    };
+    return texts[quality] || quality;
+  };
+
+  const filteredCases = qualityFilter === 'ALL' 
+    ? cases 
+    : cases.filter((caseItem: any) => 
+        caseItem.items?.some((item: any) => item.item.rarity === qualityFilter)
+      );
 
   return (
     <div className="relative">
@@ -127,18 +154,39 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
         >
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-4xl font-bold">Доступные кейсы</h2>
-            <div className="flex gap-2">
-              <button className="glass px-4 py-2 rounded-lg hover:bg-primary/10 transition">
-                Все
-              </button>
-              <button className="glass px-4 py-2 rounded-lg hover:bg-primary/10 transition">
-                Популярные
-              </button>
-              <button className="glass px-4 py-2 rounded-lg hover:bg-primary/10 transition">
-                Новые
-              </button>
+          <div className="mb-8">
+            <h2 className="text-4xl font-bold mb-6">Доступные кейсы</h2>
+            
+            {/* Quality Filters */}
+            <div className="flex gap-3 flex-wrap">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setQualityFilter('ALL')}
+                className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                  qualityFilter === 'ALL'
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/50'
+                    : 'glass hover:bg-primary/10'
+                }`}
+              >
+                Все качества
+              </motion.button>
+              
+              {['LEGENDARY', 'MASTER', 'VETERAN', 'STALKER'].map((quality) => (
+                <motion.button
+                  key={quality}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setQualityFilter(quality)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                    qualityFilter === quality
+                      ? `bg-gradient-to-r ${getQualityColor(quality)} text-white shadow-lg`
+                      : 'glass hover:bg-primary/10'
+                  }`}
+                >
+                  {getQualityText(quality)}
+                </motion.button>
+              ))}
             </div>
           </div>
 
@@ -150,9 +198,16 @@ export default function Home() {
                 className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full"
               />
             </div>
+          ) : filteredCases.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="text-6xl mb-4">📦</div>
+              <p className="text-xl text-muted-foreground">
+                Нет кейсов с предметами качества "{getQualityText(qualityFilter)}"
+              </p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {cases.map((caseItem: any, index) => (
+              {filteredCases.map((caseItem: any, index) => (
                 <motion.div
                   key={caseItem.id}
                   initial={{ opacity: 0, y: 20 }}
