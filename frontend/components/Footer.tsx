@@ -8,8 +8,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <div className="text-2xl font-black bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-3">
-              HeliWin
+            <div className="flex items-center gap-2 mb-3">
+              <img src="/logo.png" alt="HeliWin" className="h-8 w-auto" />
+              <div className="text-2xl font-black bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                HeliWin
+              </div>
             </div>
             <p className="text-sm text-muted-foreground">
               Платформа открытия кейсов со Stalcraft предметами

@@ -1,12 +1,2 @@
 node_modules
-dist
-.next
-*.db
-*.db-journal
-.env
-.env.local
-.DS_Store
-*.log
-coverage
 .vscode
-.idea

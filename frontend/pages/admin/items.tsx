@@ -15,7 +15,7 @@ export default function AdminItems() {
   const [formData, setFormData] = useState({
     name: '',
     category: '',
-    rarity: 'COMMON',
+    rarity: 'STALKER',
     basePrice: 0,
     icon: '',
   });
@@ -67,7 +67,7 @@ export default function AdminItems() {
       }
       setShowModal(false);
       setEditingItem(null);
-      setFormData({ name: '', category: '', rarity: 'COMMON', basePrice: 0, icon: '' });
+      setFormData({ name: '', category: '', rarity: 'STALKER', basePrice: 0, icon: '' });
       setSelectedFile(null);
       setPreviewUrl('');
       fetchItems();
@@ -114,10 +114,9 @@ export default function AdminItems() {
 
   const getRarityColor = (rarity: string) => {
     const colors: Record<string, string> = {
-      COMMON: 'from-gray-500 to-gray-600',
-      UNCOMMON: 'from-green-500 to-green-600',
-      RARE: 'from-blue-500 to-blue-600',
-      EXCEPTIONAL: 'from-purple-500 to-purple-600',
+      STALKER: 'from-blue-500 to-blue-600',
+      VETERAN: 'from-purple-500 to-purple-600',
+      MASTER: 'from-orange-500 to-orange-600',
       LEGENDARY: 'from-yellow-500 to-yellow-600',
     };
     return colors[rarity] || 'from-gray-500 to-gray-600';
@@ -142,7 +141,7 @@ export default function AdminItems() {
             whileTap={{ scale: 0.95 }}
             onClick={() => {
               setEditingItem(null);
-              setFormData({ name: '', category: '', rarity: 'COMMON', basePrice: 0, icon: '' });
+              setFormData({ name: '', category: '', rarity: 'STALKER', basePrice: 0, icon: '' });
               setSelectedFile(null);
               setPreviewUrl('');
               setShowModal(true);
@@ -248,11 +247,10 @@ export default function AdminItems() {
                       onChange={(e) => setFormData({ ...formData, rarity: e.target.value })}
                       className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
                     >
-                      <option value="COMMON">Обычный</option>
-                      <option value="UNCOMMON">Необычный</option>
-                      <option value="RARE">Редкий</option>
-                      <option value="EXCEPTIONAL">Исключительный</option>
-                      <option value="LEGENDARY">Легендарный</option>
+                      <option value="STALKER">Сталкерское</option>
+                      <option value="VETERAN">Ветеранское</option>
+                      <option value="MASTER">Мастерское</option>
+                      <option value="LEGENDARY">Легендарное</option>
                     </select>
                   </div>
                   <div>

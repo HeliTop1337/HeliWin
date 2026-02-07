@@ -77,6 +77,7 @@ export class CasesService {
         user.username,
         inventoryItem.item,
         caseData.name,
+        finalPrice,
       );
 
       return result;
@@ -84,31 +85,32 @@ export class CasesService {
   }
 
   private selectRandomItem(caseItems: any[], caseName: string) {
-    // Улучшенная система шансов с подкруткой для дорогих кейсов
+    // Используем шансы из базы данных (dropChance)
+    // Для легендарного кейса шансы уже настроены через скрипт update-case-chances.ts
     const adjustedItems = caseItems.map(ci => {
       let adjustedChance = ci.dropChance;
       
-      // Подкрутка шансов в зависимости от типа кейса
-      if (caseName.includes('Легендарный')) {
-        // Легендарный кейс: значительно повышаем шансы на редкие предметы
-        if (ci.item.rarity === 'LEGENDARY') {
-          adjustedChance *= 8; // 1% -> 8%
-        } else if (ci.item.rarity === 'EXCEPTIONAL') {
-          adjustedChance *= 5; // 4% -> 20%
-        } else if (ci.item.rarity === 'RARE') {
-          adjustedChance *= 3; // 10% -> 30%
-        }
-      } else if (caseName.includes('Премиум')) {
-        // Премиум кейс: умеренно повышаем шансы
-        if (ci.item.rarity === 'EXCEPTIONAL') {
-          adjustedChance *= 3; // 4% -> 12%
-        } else if (ci.item.rarity === 'RARE') {
-          adjustedChance *= 2; // 10% -> 20%
-        }
-      } else {
-        // Стартовый кейс: немного повышаем шансы на необычные предметы
-        if (ci.item.rarity === 'UNCOMMON') {
-          adjustedChance *= 1.5; // 25% -> 37.5%
+      // Подкрутка шансов только для не-легендарных кейсов
+      if (!caseName.includes('Легендарный')) {
+        if (caseName.includes('Премиум') || caseName.includes('Мастерский')) {
+          // Премиум/Мастерский кейс
+          if (ci.item.rarity === 'MASTER') {
+            adjustedChance *= 3;
+          } else if (ci.item.rarity === 'VETERAN') {
+            adjustedChance *= 2;
+          }
+        } else if (caseName.includes('Ветеранский')) {
+          // Ветеранский кейс
+          if (ci.item.rarity === 'VETERAN') {
+            adjustedChance *= 2.5;
+          } else if (ci.item.rarity === 'STALKER') {
+            adjustedChance *= 1.5;
+          }
+        } else {
+          // Стартовый/Сталкерский кейс
+          if (ci.item.rarity === 'STALKER') {
+            adjustedChance *= 1.5;
+          }
         }
       }
       

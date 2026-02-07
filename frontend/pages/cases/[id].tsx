@@ -14,9 +14,11 @@ export default function CaseDetail() {
   const [loading, setLoading] = useState(true);
   const [opening, setOpening] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [results, setResults] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
   const [rouletteItems, setRouletteItems] = useState<any[]>([]);
   const [winningIndex, setWinningIndex] = useState<number>(49);
+  const [openCount, setOpenCount] = useState<number>(1);
   const { toasts, removeToast, error: showError, success: showSuccess } = useToast();
 
   useEffect(() => {
@@ -48,7 +50,7 @@ export default function CaseDetail() {
       return;
     }
 
-    const finalPrice = caseData.price * (1 - (caseData.discount || 0) / 100);
+    const finalPrice = caseData.price * (1 - (caseData.discount || 0) / 100) * openCount;
     if (user && user.balance < finalPrice) {
       showError('Недостаточно средств для открытия кейса!');
       return;
@@ -56,45 +58,67 @@ export default function CaseDetail() {
 
     setOpening(true);
     setResult(null);
+    setResults([]);
 
     try {
-      const { data } = await api.post(`/api/cases/${id}/open`);
-      
-      // Создаем массив для рулетки с РЕАЛЬНЫМ выигранным предметом
-      const rouletteArray = [];
-      
-      // Добавляем 49 случайных предметов в начало
-      for (let i = 0; i < 49; i++) {
-        const randomItem = items[Math.floor(Math.random() * items.length)];
-        rouletteArray.push(randomItem);
-      }
-      
-      // ВАЖНО: Добавляем РЕАЛЬНЫЙ выигранный предмет с сервера
-      // Создаем объект в том же формате что и items
-      const wonItemForRoulette = {
-        item: data.item, // Используем item напрямую из ответа сервера
-        dropChance: 0
-      };
-      rouletteArray.push(wonItemForRoulette);
-      setWinningIndex(49);
-      
-      // Добавляем еще 10 предметов после выигранного
-      for (let i = 0; i < 10; i++) {
-        const randomItem = items[Math.floor(Math.random() * items.length)];
-        rouletteArray.push(randomItem);
-      }
-      
-      setRouletteItems(rouletteArray);
-      
-      // Показываем результат после анимации (7 секунд)
-      setTimeout(() => {
-        setResult(data);
-        if (user) {
-          setUser({ ...user, balance: data.newBalance });
+      // Если открываем несколько кейсов
+      if (openCount > 1) {
+        const openedResults = [];
+        let currentBalance = user?.balance || 0;
+
+        for (let i = 0; i < openCount; i++) {
+          const { data } = await api.post(`/api/cases/${id}/open`);
+          openedResults.push(data);
+          currentBalance = data.newBalance;
         }
-        showSuccess(`Вы выиграли ${data.item.name}!`);
+
+        setResults(openedResults);
+        if (user) {
+          setUser({ ...user, balance: currentBalance });
+        }
+        
+        const totalValue = openedResults.reduce((sum, r) => sum + r.item.basePrice, 0);
+        showSuccess(`Открыто ${openCount} кейсов! Общая стоимость: ${totalValue.toFixed(2)} ₽`);
         setOpening(false);
-      }, 7000);
+      } else {
+        // Открываем один кейс с анимацией
+        const { data } = await api.post(`/api/cases/${id}/open`);
+        
+        // Создаем массив для рулетки с РЕАЛЬНЫМ выигранным предметом
+        const rouletteArray = [];
+        
+        // Добавляем 49 случайных предметов в начало
+        for (let i = 0; i < 49; i++) {
+          const randomItem = items[Math.floor(Math.random() * items.length)];
+          rouletteArray.push(randomItem);
+        }
+        
+        // ВАЖНО: Добавляем РЕАЛЬНЫЙ выигранный предмет с сервера
+        const wonItemForRoulette = {
+          item: data.item,
+          dropChance: 0
+        };
+        rouletteArray.push(wonItemForRoulette);
+        setWinningIndex(49);
+        
+        // Добавляем еще 10 предметов после выигранного
+        for (let i = 0; i < 10; i++) {
+          const randomItem = items[Math.floor(Math.random() * items.length)];
+          rouletteArray.push(randomItem);
+        }
+        
+        setRouletteItems(rouletteArray);
+        
+        // Показываем результат после анимации (7 секунд)
+        setTimeout(() => {
+          setResult(data);
+          if (user) {
+            setUser({ ...user, balance: data.newBalance });
+          }
+          showSuccess(`Вы выиграли ${data.item.name}!`);
+          setOpening(false);
+        }, 7000);
+      }
     } catch (error: any) {
       showError(error.response?.data?.message || 'Ошибка открытия кейса');
       setOpening(false);
@@ -103,10 +127,9 @@ export default function CaseDetail() {
 
   const getRarityColor = (rarity: string) => {
     const colors = {
-      COMMON: 'from-gray-500 to-gray-600',
-      UNCOMMON: 'from-green-500 to-green-600',
-      RARE: 'from-blue-500 to-blue-600',
-      EXCEPTIONAL: 'from-purple-500 to-purple-600',
+      STALKER: 'from-blue-500 to-blue-600',
+      VETERAN: 'from-purple-500 to-purple-600',
+      MASTER: 'from-orange-500 to-orange-600',
       LEGENDARY: 'from-yellow-500 to-yellow-600',
     };
     return colors[rarity as keyof typeof colors] || 'from-gray-500 to-gray-600';
@@ -114,11 +137,10 @@ export default function CaseDetail() {
 
   const getRarityText = (rarity: string) => {
     const texts: Record<string, string> = {
-      COMMON: 'Обычный',
-      UNCOMMON: 'Необычный',
-      RARE: 'Редкий',
-      EXCEPTIONAL: 'Исключительный',
-      LEGENDARY: 'Легендарный',
+      STALKER: 'Сталкерское',
+      VETERAN: 'Ветеранское',
+      MASTER: 'Мастерское',
+      LEGENDARY: 'Легендарное',
     };
     return texts[rarity] || rarity;
   };
@@ -182,15 +204,34 @@ export default function CaseDetail() {
             <div className="flex-1">
               <h1 className="text-4xl font-bold mb-2">{caseData.name}</h1>
               <p className="text-muted-foreground mb-4">{caseData.description}</p>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 mb-4">
                 <div className="text-3xl font-bold text-primary">
-                  {caseData.price.toFixed(2)} ₽
+                  {(caseData.price * openCount).toFixed(2)} ₽
                 </div>
                 {caseData.discount > 0 && (
                   <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                     -{caseData.discount}%
                   </div>
                 )}
+              </div>
+              
+              {/* Open Count Selector */}
+              <div className="flex gap-2">
+                {[1, 3, 5, 10].map((count) => (
+                  <motion.button
+                    key={count}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setOpenCount(count)}
+                    className={`px-4 py-2 rounded-lg font-semibold transition ${
+                      openCount === count
+                        ? 'bg-primary text-primary-foreground shadow-lg'
+                        : 'glass hover:bg-primary/10'
+                    }`}
+                  >
+                    x{count}
+                  </motion.button>
+                ))}
               </div>
             </div>
 
@@ -201,13 +242,13 @@ export default function CaseDetail() {
               disabled={opening}
               className="btn-primary glow-purple-strong text-xl px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {opening ? 'Открытие...' : 'Открыть кейс'}
+              {opening ? 'Открытие...' : `Открыть ${openCount > 1 ? `x${openCount}` : ''}`}
             </motion.button>
           </div>
         </motion.div>
 
-        {/* Roulette Animation */}
-        {opening && rouletteItems.length > 0 && (
+        {/* Roulette Animation - только для x1 */}
+        {opening && openCount === 1 && rouletteItems.length > 0 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -259,7 +300,7 @@ export default function CaseDetail() {
           </motion.div>
         )}
 
-        {/* Result */}
+        {/* Result - Single */}
         <AnimatePresence>
           {result && (
             <motion.div
@@ -316,6 +357,75 @@ export default function CaseDetail() {
           )}
         </AnimatePresence>
 
+        {/* Multiple Results */}
+        <AnimatePresence>
+          {results.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              className="glass rounded-3xl p-8 mb-8"
+            >
+              <h2 className="text-3xl font-bold mb-6 text-center">Результаты открытия ({results.length} кейсов)</h2>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+                {results.map((res, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="glass rounded-xl p-4 text-center"
+                  >
+                    <div className={`w-full aspect-square rounded-lg bg-gradient-to-br ${getRarityColor(res.item.rarity)} mb-3 flex items-center justify-center p-2`}>
+                      {res.item.icon ? (
+                        <img 
+                          src={res.item.icon} 
+                          alt={res.item.name}
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                        </svg>
+                      )}
+                    </div>
+                    <h4 className={`font-bold text-sm mb-1 bg-gradient-to-r ${getRarityColor(res.item.rarity)} bg-clip-text text-transparent truncate`}>
+                      {res.item.name}
+                    </h4>
+                    <p className="text-xs text-muted-foreground mb-1">{getRarityText(res.item.rarity)}</p>
+                    <p className="text-sm font-bold text-primary">{res.item.basePrice.toFixed(2)} ₽</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="text-center">
+                <p className="text-xl mb-4">
+                  Общая стоимость: <span className="text-primary font-bold">{results.reduce((sum, r) => sum + r.item.basePrice, 0).toFixed(2)} ₽</span>
+                </p>
+                <div className="flex gap-4 justify-center">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setResults([])}
+                    className="btn-secondary"
+                  >
+                    Закрыть
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleOpenCase}
+                    className="btn-primary"
+                  >
+                    Открыть еще
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Available Items */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -325,37 +435,51 @@ export default function CaseDetail() {
         >
           <h2 className="text-2xl font-bold mb-6">Возможные предметы</h2>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {items.map((caseItem: any, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
-                whileHover={{ y: -5 }}
-                className="glass rounded-xl p-4 text-center"
-              >
-                <div className={`w-full aspect-square rounded-lg bg-gradient-to-br ${getRarityColor(caseItem.item.rarity)} mb-3 flex items-center justify-center p-2`}>
-                  {caseItem.item.icon ? (
-                    <img 
-                      src={caseItem.item.icon} 
-                      alt={caseItem.item.name}
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-                    </svg>
-                  )}
+          {/* Group items by rarity */}
+          {['LEGENDARY', 'MASTER', 'VETERAN', 'STALKER'].map((rarity) => {
+            const rarityItems = items.filter((item: any) => item.item.rarity === rarity);
+            if (rarityItems.length === 0) return null;
+            
+            return (
+              <div key={rarity} className="mb-8 last:mb-0">
+                <h3 className={`text-xl font-bold bg-gradient-to-r ${getRarityColor(rarity)} bg-clip-text text-transparent mb-4`}>
+                  {getRarityText(rarity)}
+                </h3>
+                
+                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                  {rarityItems.map((caseItem: any, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      whileHover={{ y: -3 }}
+                      className="glass rounded-lg p-2 text-center"
+                    >
+                      <div className={`w-full aspect-square rounded-md bg-gradient-to-br ${getRarityColor(caseItem.item.rarity)} mb-2 flex items-center justify-center p-1.5`}>
+                        {caseItem.item.icon ? (
+                          <img 
+                            src={caseItem.item.icon} 
+                            alt={caseItem.item.name}
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                          </svg>
+                        )}
+                      </div>
+                      <h4 className={`font-bold text-xs mb-0.5 bg-gradient-to-r ${getRarityColor(caseItem.item.rarity)} bg-clip-text text-transparent truncate`}>
+                        {caseItem.item.name}
+                      </h4>
+                      <p className="text-[10px] text-muted-foreground mb-0.5">{getRarityText(caseItem.item.rarity)}</p>
+                      <p className="text-[10px] text-primary font-bold">{caseItem.dropChance.toFixed(2)}%</p>
+                    </motion.div>
+                  ))}
                 </div>
-                <h4 className={`font-bold text-sm mb-1 bg-gradient-to-r ${getRarityColor(caseItem.item.rarity)} bg-clip-text text-transparent`}>
-                  {caseItem.item.name}
-                </h4>
-                <p className="text-xs text-muted-foreground mb-1">{getRarityText(caseItem.item.rarity)}</p>
-                <p className="text-xs text-primary font-bold">{caseItem.dropChance.toFixed(2)}%</p>
-              </motion.div>
-            ))}
-          </div>
+              </div>
+            );
+          })}
         </motion.div>
       </div>
     </div>

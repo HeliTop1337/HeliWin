@@ -5,13 +5,13 @@ import { useAuthStore } from '../store/useAuthStore';
 import api from '../lib/api';
 import { ToastContainer } from '../components/Toast';
 import { useToast } from '../hooks/useToast';
+import AvatarUpload from '../components/AvatarUpload';
 
 export default function Profile() {
   const router = useRouter();
   const { user, isAuthenticated, setUser } = useAuthStore();
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [avatarUrl, setAvatarUrl] = useState('');
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const { toasts, removeToast, success: showSuccess, error: showError } = useToast();
 
@@ -34,31 +34,16 @@ export default function Profile() {
     }
   };
 
-  const handleUpdateAvatar = async () => {
-    if (!avatarUrl.trim()) {
-      showError('Введите URL аватарки');
-      return;
+  const handleAvatarUpdate = (avatar: string | null) => {
+    if (user) {
+      setUser({ ...user, avatar });
     }
-
-    try {
-      const { data } = await api.post('/api/users/avatar', { avatarUrl });
-      setUser(data);
-      setShowAvatarModal(false);
-      setAvatarUrl('');
-      showSuccess('Аватарка успешно обновлена!');
-    } catch (error: any) {
-      showError(error.response?.data?.message || 'Ошибка обновления аватарки');
-    }
+    setShowAvatarModal(false);
   };
 
-  const handleDeleteAvatar = async () => {
-    try {
-      const { data } = await api.post('/api/users/avatar/delete');
-      setUser(data);
-      showSuccess('Аватарка удалена');
-    } catch (error: any) {
-      showError(error.response?.data?.message || 'Ошибка удаления аватарки');
-    }
+  const getAvatarUrl = (filename: string | null | undefined) => {
+    if (!filename) return null;
+    return `http://localhost:4000/uploads/avatars/${filename}`;
   };
 
   if (!user) return null;
@@ -79,11 +64,21 @@ export default function Profile() {
             <div className="relative z-10 flex items-center gap-6">
               <div className="relative group">
                 {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt={user.username}
-                    className="w-24 h-24 rounded-2xl object-cover shadow-2xl"
-                  />
+                  user.avatar.endsWith('.mp4') ? (
+                    <video
+                      src={getAvatarUrl(user.avatar) || ''}
+                      autoPlay
+                      loop
+                      muted
+                      className="w-24 h-24 rounded-2xl object-cover shadow-2xl"
+                    />
+                  ) : (
+                    <img
+                      src={getAvatarUrl(user.avatar) || ''}
+                      alt={user.username}
+                      className="w-24 h-24 rounded-2xl object-cover shadow-2xl"
+                    />
+                  )
                 ) : (
                   <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl font-black text-white shadow-2xl">
                     {user.username.charAt(0).toUpperCase()}
@@ -226,62 +221,21 @@ export default function Profile() {
                   onClick={(e) => e.stopPropagation()}
                   className="glass rounded-3xl p-8 max-w-md w-full"
                 >
-                  <h2 className="text-2xl font-bold mb-6">Изменить аватарку</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-center">Изменить аватар</h2>
                   
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">URL изображения</label>
-                      <input
-                        type="url"
-                        value={avatarUrl}
-                        onChange={(e) => setAvatarUrl(e.target.value)}
-                        placeholder="https://example.com/avatar.jpg"
-                        className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition"
-                      />
-                    </div>
+                  <AvatarUpload
+                    currentAvatar={user.avatar}
+                    onAvatarUpdate={handleAvatarUpdate}
+                  />
 
-                    {avatarUrl && (
-                      <div className="flex justify-center">
-                        <img
-                          src={avatarUrl}
-                          alt="Preview"
-                          className="w-32 h-32 rounded-2xl object-cover"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    <div className="flex gap-3">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={handleUpdateAvatar}
-                        className="flex-1 btn-primary"
-                      >
-                        Сохранить
-                      </motion.button>
-                      {user.avatar && (
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={handleDeleteAvatar}
-                          className="px-4 py-3 glass rounded-xl font-semibold hover:bg-red-500/10 transition"
-                        >
-                          Удалить
-                        </motion.button>
-                      )}
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setShowAvatarModal(false)}
-                        className="px-4 py-3 glass rounded-xl font-semibold hover:bg-secondary transition"
-                      >
-                        Отмена
-                      </motion.button>
-                    </div>
-                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowAvatarModal(false)}
+                    className="w-full mt-6 px-4 py-3 glass rounded-xl font-semibold hover:bg-secondary transition"
+                  >
+                    Закрыть
+                  </motion.button>
                 </motion.div>
               </motion.div>
             )}

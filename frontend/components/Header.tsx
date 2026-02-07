@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useAuthStore } from '../store/useAuthStore';
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import ThemeToggle from './ThemeToggle';
+import OnlineCounter from './OnlineCounter';
 
 export default function Header() {
   const { user, isAuthenticated, logout } = useAuthStore();
@@ -13,12 +13,21 @@ export default function Header() {
     router.push('/login');
   };
 
+  const getAvatarUrl = (filename: string | null | undefined) => {
+    if (!filename) return null;
+    return `http://localhost:4000/uploads/avatars/${filename}`;
+  };
+
+  const avatarUrl = getAvatarUrl(user?.avatar);
+  const isVideoAvatar = user?.avatar?.endsWith('.mp4');
+
   return (
-    <header className="sticky top-0 z-50 glass border-b border-border backdrop-blur-xl">
+    <header className="sticky top-0 z-40 backdrop-blur-xl bg-gradient-to-b from-black/60 to-black/40 border-b border-white/5">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="HeliWin" className="h-10 w-auto" />
             <div className="text-2xl font-black bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
               HeliWin
             </div>
@@ -28,6 +37,12 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-1">
             <NavLink href="/" active={router.pathname === '/'}>
               Кейсы
+            </NavLink>
+            <NavLink href="/crash" active={router.pathname === '/crash'}>
+              Crash
+            </NavLink>
+            <NavLink href="/contract" active={router.pathname === '/contract'}>
+              Контракт
             </NavLink>
             <NavLink href="/battles" active={router.pathname === '/battles'}>
               Батлы
@@ -60,7 +75,7 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <ThemeToggle />
+            <OnlineCounter />
             
             {isAuthenticated ? (
               <>
@@ -74,8 +89,27 @@ export default function Header() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="glass px-4 py-2 rounded-lg font-medium hover:bg-primary/10 transition"
+                      className="glass px-4 py-2 rounded-lg font-medium hover:bg-primary/10 transition flex items-center gap-2"
                     >
+                      {avatarUrl && (
+                        <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-primary/30">
+                          {isVideoAvatar ? (
+                            <video
+                              src={avatarUrl}
+                              autoPlay
+                              loop
+                              muted
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <img
+                              src={avatarUrl}
+                              alt={user?.username}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                      )}
                       {user?.username}
                     </motion.button>
                   </Link>

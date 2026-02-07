@@ -65,8 +65,21 @@ export class AdminController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: any,
   ) {
-    const iconUrl = file ? `/uploads/items/${file.filename}` : data.icon;
-    return this.adminService.createItem({ ...data, icon: iconUrl }, req.user.id);
+    let iconUrl = data.icon || '';
+    
+    // If file was uploaded, use the uploaded file path
+    if (file) {
+      iconUrl = `/uploads/items/${file.filename}`;
+    }
+    
+    const createData = {
+      name: data.name,
+      category: data.category,
+      rarity: data.rarity,
+      basePrice: parseFloat(data.basePrice),
+      icon: iconUrl,
+    };
+    return this.adminService.createItem(createData, req.user.id);
   }
 
   @Patch('items/:id')
@@ -85,8 +98,27 @@ export class AdminController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: any,
   ) {
-    const iconUrl = file ? `/uploads/items/${file.filename}` : data.icon;
-    return this.adminService.updateItem(itemId, { ...data, icon: iconUrl }, req.user.id);
+    let iconUrl = data.icon || undefined;
+    
+    // If file was uploaded, use the uploaded file path
+    if (file) {
+      iconUrl = `/uploads/items/${file.filename}`;
+    }
+    
+    const updateData = {
+      name: data.name,
+      category: data.category,
+      rarity: data.rarity,
+      basePrice: data.basePrice ? parseFloat(data.basePrice) : undefined,
+      icon: iconUrl,
+    };
+    
+    // Remove undefined values
+    Object.keys(updateData).forEach(key => 
+      updateData[key] === undefined && delete updateData[key]
+    );
+    
+    return this.adminService.updateItem(itemId, updateData, req.user.id);
   }
 
   @Delete('items/:id')

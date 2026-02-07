@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",
+    "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^10.3.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
@@ -26,6 +27,7 @@
     "@nestjs/websockets": "^10.3.0",
     "@prisma/client": "^5.8.0",
     "@types/multer": "^2.0.0",
+    "@types/uuid": "^10.0.0",
     "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
@@ -42,6 +44,7 @@
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
+    "uuid": "^13.0.0",
     "zustand": "^4.5.7"
   },
   "devDependencies": {
