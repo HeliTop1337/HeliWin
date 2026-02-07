@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/useAuthStore';
 import api from '../../lib/api';
+import { getImageUrl } from '../../lib/imageUrl';
 import { ToastContainer } from '../../components/Toast';
 import { useToast } from '../../hooks/useToast';
 
@@ -190,60 +191,101 @@ export default function CaseDetail() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-3xl p-8 mb-8 relative overflow-hidden"
+          className="glass rounded-3xl overflow-hidden mb-8 relative"
         >
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-3xl" />
-          
-          <div className="relative z-10 flex items-center gap-8">
-            <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-2xl">
-              <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
-              </svg>
+          <div className="flex flex-col md:flex-row">
+            {/* Case Image */}
+            <div className="w-full md:w-80 aspect-square bg-background/50 flex items-center justify-center overflow-hidden relative">
+              {caseData.icon ? (
+                <img 
+                  src={getImageUrl(caseData.icon)} 
+                  alt={caseData.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const parent = e.currentTarget.parentElement;
+                    if (parent) {
+                      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                      svg.setAttribute('class', 'w-32 h-32 text-primary');
+                      svg.setAttribute('fill', 'currentColor');
+                      svg.setAttribute('viewBox', '0 0 24 24');
+                      svg.innerHTML = '<path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>';
+                      parent.appendChild(svg);
+                    }
+                  }}
+                />
+              ) : (
+                <svg className="w-32 h-32 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+                </svg>
+              )}
+              
+              {/* Discount badge */}
+              {caseData.discount > 0 && (
+                <motion.div
+                  initial={{ scale: 0, rotate: -45 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  className="absolute top-4 right-4 bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg z-10"
+                >
+                  -{caseData.discount}%
+                </motion.div>
+              )}
             </div>
             
-            <div className="flex-1">
-              <h1 className="text-4xl font-bold mb-2">{caseData.name}</h1>
-              <p className="text-muted-foreground mb-4">{caseData.description}</p>
-              <div className="flex items-center gap-4 mb-4">
-                <div className="text-3xl font-bold text-primary">
-                  {(caseData.price * openCount).toFixed(2)} ₽
-                </div>
-                {caseData.discount > 0 && (
-                  <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    -{caseData.discount}%
+            {/* Case Info */}
+            <div className="flex-1 p-8 flex flex-col justify-between">
+              <div>
+                <h1 className="text-4xl font-bold mb-3">{caseData.name}</h1>
+                <p className="text-muted-foreground text-lg mb-6">
+                  {caseData.description || 'Откройте кейс и получите случайный предмет'}
+                </p>
+                
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
+                    {(caseData.price * openCount * (1 - (caseData.discount || 0) / 100)).toFixed(2)} ₽
                   </div>
-                )}
+                  {caseData.discount > 0 && (
+                    <div className="text-xl text-muted-foreground line-through">
+                      {(caseData.price * openCount).toFixed(2)} ₽
+                    </div>
+                  )}
+                </div>
               </div>
               
-              {/* Open Count Selector */}
-              <div className="flex gap-2">
-                {[1, 3, 5, 10].map((count) => (
-                  <motion.button
-                    key={count}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setOpenCount(count)}
-                    className={`px-4 py-2 rounded-lg font-semibold transition ${
-                      openCount === count
-                        ? 'bg-primary text-primary-foreground shadow-lg'
-                        : 'glass hover:bg-primary/10'
-                    }`}
-                  >
-                    x{count}
-                  </motion.button>
-                ))}
+              <div>
+                {/* Open Count Selector */}
+                <div className="mb-4">
+                  <p className="text-sm text-muted-foreground mb-2">Количество открытий:</p>
+                  <div className="flex gap-2">
+                    {[1, 3, 5, 10].map((count) => (
+                      <motion.button
+                        key={count}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setOpenCount(count)}
+                        className={`px-6 py-3 rounded-xl font-semibold transition ${
+                          openCount === count
+                            ? 'bg-primary text-primary-foreground shadow-lg'
+                            : 'glass hover:bg-primary/10'
+                        }`}
+                      >
+                        x{count}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleOpenCase}
+                  disabled={opening}
+                  className="w-full btn-primary glow-purple-strong text-xl px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {opening ? 'Открытие...' : `Открыть ${openCount > 1 ? `x${openCount}` : ''}`}
+                </motion.button>
               </div>
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleOpenCase}
-              disabled={opening}
-              className="btn-primary glow-purple-strong text-xl px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {opening ? 'Открытие...' : `Открыть ${openCount > 1 ? `x${openCount}` : ''}`}
-            </motion.button>
           </div>
         </motion.div>
 

@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
 
 @Injectable()
 export class AdminService {
@@ -7,20 +9,86 @@ export class AdminService {
 
   async createCase(data: any, adminId: string) {
     const caseData = await this.prisma.case.create({ data });
-    await this.logAction(adminId, 'CREATE_CASE', 'Case', caseData.id);
+    await this.logAction(adminId, 'CREATE_CASE', 'Case', caseData.id, `Создан кейс: ${data.name}`);
     return caseData;
   }
 
   async updateCase(id: string, data: any, adminId: string) {
+    // Если обновляется иконка, удаляем старую
+    if (data.icon) {
+      const oldCase = await this.prisma.case.findUnique({ where: { id } });
+      if (oldCase?.icon && oldCase.icon.startsWith('/uploads/')) {
+        await this.deleteFile(oldCase.icon);
+      }
+    }
+    
     const caseData = await this.prisma.case.update({ where: { id }, data });
-    await this.logAction(adminId, 'UPDATE_CASE', 'Case', id);
+    await this.logAction(adminId, 'UPDATE_CASE', 'Case', id, `Обновлен кейс: ${caseData.name}`);
     return caseData;
   }
 
   async deleteCase(id: string, adminId: string) {
+    const caseData = await this.prisma.case.findUnique({ where: { id } });
+    
+    // Удаляем иконку кейса
+    if (caseData?.icon && caseData.icon.startsWith('/uploads/')) {
+      await this.deleteFile(caseData.icon);
+    }
+    
     await this.prisma.case.delete({ where: { id } });
-    await this.logAction(adminId, 'DELETE_CASE', 'Case', id);
+    await this.logAction(adminId, 'DELETE_CASE', 'Case', id, `Удален кейс: ${caseData?.name}`);
     return { message: 'Кейс удален' };
+  }
+
+  async addItemToCase(caseId: string, itemId: string, dropChance: number, adminId: string) {
+    const caseItem = await this.prisma.caseItem.create({
+      data: {
+        caseId,
+        itemId,
+        dropChance,
+      },
+      include: {
+        item: true,
+        case: true,
+      },
+    });
+    await this.logAction(adminId, 'ADD_ITEM_TO_CASE', 'CaseItem', caseItem.id, `Добавлен предмет ${caseItem.item.name} в кейс ${caseItem.case.name}`);
+    return caseItem;
+  }
+
+  async removeItemFromCase(caseId: string, itemId: string, adminId: string) {
+    const caseItem = await this.prisma.caseItem.findFirst({
+      where: { caseId, itemId },
+      include: { item: true, case: true },
+    });
+    
+    if (caseItem) {
+      await this.prisma.caseItem.delete({
+        where: { id: caseItem.id },
+      });
+      await this.logAction(adminId, 'REMOVE_ITEM_FROM_CASE', 'CaseItem', caseItem.id, `Удален предмет ${caseItem.item.name} из кейса ${caseItem.case.name}`);
+    }
+    
+    return { message: 'Предмет удален из кейса' };
+  }
+
+  async updateCaseItemChance(caseId: string, itemId: string, dropChance: number, adminId: string) {
+    const caseItem = await this.prisma.caseItem.findFirst({
+      where: { caseId, itemId },
+    });
+
+    if (!caseItem) {
+      throw new NotFoundException('Предмет не найден в кейсе');
+    }
+
+    const updated = await this.prisma.caseItem.update({
+      where: { id: caseItem.id },
+      data: { dropChance },
+      include: { item: true, case: true },
+    });
+
+    await this.logAction(adminId, 'UPDATE_CASE_ITEM_CHANCE', 'CaseItem', updated.id, `Обновлен шанс предмета ${updated.item.name} в кейсе ${updated.case.name}: ${dropChance}%`);
+    return updated;
   }
 
   async getAllCases() {
@@ -41,12 +109,27 @@ export class AdminService {
   }
 
   async updateItem(id: string, data: any, adminId: string) {
+    // Если обновляется иконка, удаляем старую
+    if (data.icon) {
+      const oldItem = await this.prisma.item.findUnique({ where: { id } });
+      if (oldItem?.icon && oldItem.icon.startsWith('/uploads/')) {
+        await this.deleteFile(oldItem.icon);
+      }
+    }
+    
     const item = await this.prisma.item.update({ where: { id }, data });
     await this.logAction(adminId, 'UPDATE_ITEM', 'Item', id);
     return item;
   }
 
   async deleteItem(id: string, adminId: string) {
+    const item = await this.prisma.item.findUnique({ where: { id } });
+    
+    // Удаляем иконку предмета
+    if (item?.icon && item.icon.startsWith('/uploads/')) {
+      await this.deleteFile(item.icon);
+    }
+    
     await this.prisma.item.delete({ where: { id } });
     await this.logAction(adminId, 'DELETE_ITEM', 'Item', id);
     return { message: 'Предмет удален' };
@@ -239,6 +322,15 @@ export class AdminService {
       take: limit,
       orderBy: { createdAt: 'desc' },
     });
+  }
+
+  private async deleteFile(filePath: string) {
+    try {
+      const fullPath = join(process.cwd(), filePath);
+      await unlink(fullPath);
+    } catch (error) {
+      console.error(`Failed to delete file ${filePath}:`, error);
+    }
   }
 
   private async logAction(

@@ -10,7 +10,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Статические файлы для загруженных картинок
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+  // В режиме разработки используем корневую папку, в продакшене - dist
+  const uploadsPath = process.env.NODE_ENV === 'production' 
+    ? join(__dirname, '..', 'uploads')
+    : join(process.cwd(), 'uploads');
+  
+  app.useStaticAssets(uploadsPath, {
     prefix: '/uploads/',
   });
 
