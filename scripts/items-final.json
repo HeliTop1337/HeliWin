@@ -1,0 +1,1154 @@
+[
+  {
+    "externalId": "0r2g1",
+    "name": "9А-91",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/0r2g1/icon"
+  },
+  {
+    "externalId": "0r2zd",
+    "name": "«Уравнитель»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/0r2zd/icon"
+  },
+  {
+    "externalId": "0r3nd",
+    "name": "Поношенная HK G3A1",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/0r3nd/icon"
+  },
+  {
+    "externalId": "0rq99",
+    "name": "«Руна» (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/0rq99/icon"
+  },
+  {
+    "externalId": "1",
+    "name": "FAL (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1/icon"
+  },
+  {
+    "externalId": "1r731",
+    "name": "Kbk wz. 88 Tantal",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1r731/icon"
+  },
+  {
+    "externalId": "1r7g1",
+    "name": "Steyr AUG A3",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1r7g1/icon"
+  },
+  {
+    "externalId": "1rd56",
+    "name": "АКС-74",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1rd56/icon"
+  },
+  {
+    "externalId": "1rdk6",
+    "name": "АК-9М «Койот»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1rdk6/icon"
+  },
+  {
+    "externalId": "2odq0",
+    "name": "АК-203",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/2odq0/icon"
+  },
+  {
+    "externalId": "2ody0",
+    "name": "ОЦ-14-А1 «Тор»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/2ody0/icon"
+  },
+  {
+    "externalId": "2ony6",
+    "name": "IWI Tavor X95",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/2ony6/icon"
+  },
+  {
+    "externalId": "3gn5g",
+    "name": "ТКБ-0146М",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/3gn5g/icon"
+  },
+  {
+    "externalId": "3gr6z",
+    "name": "LWRC M6",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/3gr6z/icon"
+  },
+  {
+    "externalId": "3grwz",
+    "name": "PSA PA 10 «Такт»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/3grwz/icon"
+  },
+  {
+    "externalId": "4q09p",
+    "name": "HK G3A1",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/4q09p/icon"
+  },
+  {
+    "externalId": "4q0gl",
+    "name": "MK47 Mutant",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/4q0gl/icon"
+  },
+  {
+    "externalId": "4qnwn",
+    "name": "ОЦ-14М «Ураган»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/4qnwn/icon"
+  },
+  {
+    "externalId": "5ld1g",
+    "name": "ОЦ-14 «Гроза»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ld1g/icon"
+  },
+  {
+    "externalId": "5ldkg",
+    "name": "АКМ",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ldkg/icon"
+  },
+  {
+    "externalId": "5ldwg",
+    "name": "АКС-74У",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Отмычка",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ldwg/icon"
+  },
+  {
+    "externalId": "5ldz4",
+    "name": "А-762 «Арес»",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ldz4/icon"
+  },
+  {
+    "externalId": "5lgo1",
+    "name": "XM8 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5lgo1/icon"
+  },
+  {
+    "externalId": "5lnw0",
+    "name": "FN FAL",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5lnw0/icon"
+  },
+  {
+    "externalId": "6wr0j",
+    "name": "АЕК-973 «Марс»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/6wr0j/icon"
+  },
+  {
+    "externalId": "6wr5j",
+    "name": "АК-15",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/6wr5j/icon"
+  },
+  {
+    "externalId": "7lnj7",
+    "name": "SA-58 CTC",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7lnj7/icon"
+  },
+  {
+    "externalId": "7lrj3",
+    "name": "АКС-9 «Горностай»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7lrj3/icon"
+  },
+  {
+    "externalId": "7lrm3",
+    "name": "Старый FN FAL",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7lrm3/icon"
+  },
+  {
+    "externalId": "7lry3",
+    "name": "АМБ-17",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7lry3/icon"
+  },
+  {
+    "externalId": "7lrz3",
+    "name": "АК-103",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7lrz3/icon"
+  },
+  {
+    "externalId": "969jz",
+    "name": "Steyr AUG A2",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/969jz/icon"
+  },
+  {
+    "externalId": "96m4w",
+    "name": "QBZ-191 «Буревестник»",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/96m4w/icon"
+  },
+  {
+    "externalId": "96mn0",
+    "name": "PSA PA 10 «Ритм»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/96mn0/icon"
+  },
+  {
+    "externalId": "96my0",
+    "name": "АЛК-22 «Стрекоза»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/96my0/icon"
+  },
+  {
+    "externalId": "dmjdn",
+    "name": "АК-308",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/dmjdn/icon"
+  },
+  {
+    "externalId": "dmjwn",
+    "name": "HK416",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/dmjwn/icon"
+  },
+  {
+    "externalId": "dmqg5",
+    "name": "АКМ «Тишина»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/dmqg5/icon"
+  },
+  {
+    "externalId": "dmqk5",
+    "name": "АМ-17",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/dmqk5/icon"
+  },
+  {
+    "externalId": "dmv6j",
+    "name": "HK416 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/dmv6j/icon"
+  },
+  {
+    "externalId": "g4060",
+    "name": "L85A1",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/g4060/icon"
+  },
+  {
+    "externalId": "g4mdp",
+    "name": "АК-12",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/g4mdp/icon"
+  },
+  {
+    "externalId": "j5l37",
+    "name": "АЕК-971",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5l37/icon"
+  },
+  {
+    "externalId": "j5l77",
+    "name": "Поношенная L85A1",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5l77/icon"
+  },
+  {
+    "externalId": "j5lk7",
+    "name": "M16A3",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5lk7/icon"
+  },
+  {
+    "externalId": "j5lm4",
+    "name": "Beretta ARX-160",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5lm4/icon"
+  },
+  {
+    "externalId": "j5od6",
+    "name": "FAMAS G2",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5od6/icon"
+  },
+  {
+    "externalId": "j5vz0",
+    "name": "АК-308 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5vz0/icon"
+  },
+  {
+    "externalId": "knl30",
+    "name": "FN F2000 Tactical",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/knl30/icon"
+  },
+  {
+    "externalId": "knl70",
+    "name": "АКС чистильщика",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/knl70/icon"
+  },
+  {
+    "externalId": "knlo3",
+    "name": "SIG 516",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/knlo3/icon"
+  },
+  {
+    "externalId": "knv5y",
+    "name": "HK417 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/knv5y/icon"
+  },
+  {
+    "externalId": "lyl3j",
+    "name": "АШ-12",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/lyl3j/icon"
+  },
+  {
+    "externalId": "lyl7j",
+    "name": "M16A1",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Отмычка",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/lyl7j/icon"
+  },
+  {
+    "externalId": "lyljj",
+    "name": "M4 LB",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/lyljj/icon"
+  },
+  {
+    "externalId": "lyv9k",
+    "name": "X95 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/lyv9k/icon"
+  },
+  {
+    "externalId": "m023j",
+    "name": "Поношенный SIG SG 550",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/m023j/icon"
+  },
+  {
+    "externalId": "n42g1",
+    "name": "AUG A3 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/n42g1/icon"
+  },
+  {
+    "externalId": "n4md3",
+    "name": "HK XM8S",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/n4md3/icon"
+  },
+  {
+    "externalId": "okv0o",
+    "name": "M16A2",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/okv0o/icon"
+  },
+  {
+    "externalId": "okv7o",
+    "name": "АН-94 «Абакан»",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/okv7o/icon"
+  },
+  {
+    "externalId": "p63d2",
+    "name": "HK417",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/p63d2/icon"
+  },
+  {
+    "externalId": "p63g2",
+    "name": "Steyr AUG A1",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/p63g2/icon"
+  },
+  {
+    "externalId": "p6r26",
+    "name": "FN F2000",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/p6r26/icon"
+  },
+  {
+    "externalId": "qjg3j",
+    "name": "DSA-58 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/qjg3j/icon"
+  },
+  {
+    "externalId": "qjv99",
+    "name": "KS-1",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/qjv99/icon"
+  },
+  {
+    "externalId": "rw27g",
+    "name": "«Рапира»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/rw27g/icon"
+  },
+  {
+    "externalId": "rwrng",
+    "name": "АН-94М «Абакан»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/rwrng/icon"
+  },
+  {
+    "externalId": "vj2zd",
+    "name": "DSA-58",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/vj2zd/icon"
+  },
+  {
+    "externalId": "vj40r",
+    "name": "АК-12 (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/vj40r/icon"
+  },
+  {
+    "externalId": "vjr1n",
+    "name": "АК-74М",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/vjr1n/icon"
+  },
+  {
+    "externalId": "wj6l2",
+    "name": "SCAR-H (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/wj6l2/icon"
+  },
+  {
+    "externalId": "wj75o",
+    "name": "FN SCAR-H",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/wj75o/icon"
+  },
+  {
+    "externalId": "wjo4p",
+    "name": "А-545",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/wjo4p/icon"
+  },
+  {
+    "externalId": "wjogp",
+    "name": "SIG SG 550",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/wjogp/icon"
+  },
+  {
+    "externalId": "wjowd",
+    "name": "АСМ «Сервал»",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/wjowd/icon"
+  },
+  {
+    "externalId": "y32lo",
+    "name": "FN SCAR-L",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y32lo/icon"
+  },
+  {
+    "externalId": "y32wo",
+    "name": "HK XM8",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y32wo/icon"
+  },
+  {
+    "externalId": "y375z",
+    "name": "АС «Вал»",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y375z/icon"
+  },
+  {
+    "externalId": "y37kw",
+    "name": "PSA 20 STR «Пульс»",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y37kw/icon"
+  },
+  {
+    "externalId": "y3jnk",
+    "name": "XM8S (А)",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y3jnk/icon"
+  },
+  {
+    "externalId": "zz2rn",
+    "name": "АК-105",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz2rn/icon"
+  },
+  {
+    "externalId": "zz7j2",
+    "name": "HK G36C",
+    "category": "Автомат",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz7j2/icon"
+  },
+  {
+    "externalId": "zz7q9",
+    "name": "ОЦ-14М «Разряд»",
+    "category": "Автомат",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz7q9/icon"
+  },
+  {
+    "externalId": "zz7y2",
+    "name": "M4A1",
+    "category": "Автомат",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz7y2/icon"
+  },
+  {
+    "externalId": "0r211",
+    "name": "Crye Precision SIX12",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/0r211/icon"
+  },
+  {
+    "externalId": "1",
+    "name": "Franchi SPAS-12",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1/icon"
+  },
+  {
+    "externalId": "1r742",
+    "name": "БМ-16",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Отмычка",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1r742/icon"
+  },
+  {
+    "externalId": "2on45",
+    "name": "КС-23",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/2on45/icon"
+  },
+  {
+    "externalId": "3gnk5",
+    "name": "Franchi SPAS-15",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/3gnk5/icon"
+  },
+  {
+    "externalId": "4qn2o",
+    "name": "Protecta",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/4qn2o/icon"
+  },
+  {
+    "externalId": "5ln0q",
+    "name": "Shorty 590",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ln0q/icon"
+  },
+  {
+    "externalId": "5ln3q",
+    "name": "Winchester 1887",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Отмычка",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ln3q/icon"
+  },
+  {
+    "externalId": "5ln7q",
+    "name": "Сайга-12К",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5ln7q/icon"
+  },
+  {
+    "externalId": "6w64y",
+    "name": "Grizzly 8.5",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/6w64y/icon"
+  },
+  {
+    "externalId": "7ln2j",
+    "name": "АЕК-965",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7ln2j/icon"
+  },
+  {
+    "externalId": "969ky",
+    "name": "Обрез БМ-16",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Отмычка",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/969ky/icon"
+  },
+  {
+    "externalId": "dmjz2",
+    "name": "Pancor Jackhammer",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/dmjz2/icon"
+  },
+  {
+    "externalId": "g4mz5",
+    "name": "ТОЗ-34",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/g4mz5/icon"
+  },
+  {
+    "externalId": "j5o9g",
+    "name": "ОЦ-62",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/j5o9g/icon"
+  },
+  {
+    "externalId": "ly2m1",
+    "name": "M1014",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/ly2m1/icon"
+  },
+  {
+    "externalId": "m0mz2",
+    "name": "M1014 Breacher",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/m0mz2/icon"
+  },
+  {
+    "externalId": "p615w",
+    "name": "Derya MK-12 (А)",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/p615w/icon"
+  },
+  {
+    "externalId": "p63w4",
+    "name": "Derya MK-12 AS-103S",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/p63w4/icon"
+  },
+  {
+    "externalId": "qj253",
+    "name": "Chiappa Triple Crown",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/qj253/icon"
+  },
+  {
+    "externalId": "qj2zk",
+    "name": "AA-12",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/qj2zk/icon"
+  },
+  {
+    "externalId": "rw2ky",
+    "name": "МЦ-255",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/rw2ky/icon"
+  },
+  {
+    "externalId": "vj2mp",
+    "name": "KS-12 Komrad",
+    "category": "Дробовик",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/vj2mp/icon"
+  },
+  {
+    "externalId": "wj7v3",
+    "name": "РМО-93",
+    "category": "Дробовик",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/wj7v3/icon"
+  },
+  {
+    "externalId": "y32o3",
+    "name": "МР-153",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y32o3/icon"
+  },
+  {
+    "externalId": "y32v3",
+    "name": "МР-133",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y32v3/icon"
+  },
+  {
+    "externalId": "y32y3",
+    "name": "Обрез ТОЗ-34",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/y32y3/icon"
+  },
+  {
+    "externalId": "zz29n",
+    "name": "Cobray Terminator",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz29n/icon"
+  },
+  {
+    "externalId": "zz2nm",
+    "name": "Mossberg 590A1",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz2nm/icon"
+  },
+  {
+    "externalId": "zz2om",
+    "name": "Mossberg 500",
+    "category": "Дробовик",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/zz2om/icon"
+  },
+  {
+    "externalId": "1",
+    "name": "СВД",
+    "category": "Снайперская винтовка",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1/icon"
+  },
+  {
+    "externalId": "14",
+    "name": "СКС",
+    "category": "Снайперская винтовка",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/14/icon"
+  },
+  {
+    "externalId": "1r79g",
+    "name": "СКТ-40",
+    "category": "Снайперская винтовка",
+    "rarity": "COMMON",
+    "rank": "Новичок",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1r79g/icon"
+  },
+  {
+    "externalId": "1r7rg",
+    "name": "Карабин Мосина",
+    "category": "Снайперская винтовка",
+    "rarity": "COMMON",
+    "rank": "Отмычка",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/1r7rg/icon"
+  },
+  {
+    "externalId": "2olgl",
+    "name": "Cheytac M300 (А)",
+    "category": "Снайперская винтовка",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/2olgl/icon"
+  },
+  {
+    "externalId": "2ongl",
+    "name": "Cheytac M300",
+    "category": "Снайперская винтовка",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/2ongl/icon"
+  },
+  {
+    "externalId": "3gnzl",
+    "name": "QBU-191",
+    "category": "Снайперская винтовка",
+    "rarity": "EXCEPTIONAL",
+    "rank": "Мастер",
+    "basePrice": 455,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/3gnzl/icon"
+  },
+  {
+    "externalId": "4qn7r",
+    "name": "CR-380",
+    "category": "Снайперская винтовка",
+    "rarity": "LEGENDARY",
+    "rank": "Легенда",
+    "basePrice": 1170,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/4qn7r/icon"
+  },
+  {
+    "externalId": "4qnkr",
+    "name": "Steyr Scout",
+    "category": "Снайперская винтовка",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/4qnkr/icon"
+  },
+  {
+    "externalId": "5lno1",
+    "name": "СВУ",
+    "category": "Снайперская винтовка",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5lno1/icon"
+  },
+  {
+    "externalId": "5lnp0",
+    "name": "СОК-94",
+    "category": "Снайперская винтовка",
+    "rarity": "COMMON",
+    "rank": "Сталкер",
+    "basePrice": 39,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5lnp0/icon"
+  },
+  {
+    "externalId": "5lny1",
+    "name": "M40A5",
+    "category": "Снайперская винтовка",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/5lny1/icon"
+  },
+  {
+    "externalId": "7lnk7",
+    "name": "МЦ-116М",
+    "category": "Снайперская винтовка",
+    "rarity": "RARE",
+    "rank": "Ветеран",
+    "basePrice": 234,
+    "icon": "https://eapi.stalcraft.net/RU/ru/item/7lnk7/icon"
+  }
+]
