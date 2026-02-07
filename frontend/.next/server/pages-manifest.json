@@ -1,0 +1,11 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/": "pages/index.js",
+  "/contract": "pages/contract.js",
+  "/cases/[id]": "pages/cases/[id].js",
+  "/profile": "pages/profile.js",
+  "/battles": "pages/battles.js",
+  "/upgrade": "pages/upgrade.js"
+}

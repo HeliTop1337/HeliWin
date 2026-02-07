@@ -29,6 +29,9 @@ export default function Header() {
             <NavLink href="/" active={router.pathname === '/'}>
               Кейсы
             </NavLink>
+            <NavLink href="/contract" active={router.pathname === '/contract'}>
+              Контракт
+            </NavLink>
             <NavLink href="/battles" active={router.pathname === '/battles'}>
               Батлы
             </NavLink>

@@ -12,6 +12,7 @@ import { UpgradesModule } from './upgrades/upgrades.module';
 import { BattlesModule } from './battles/battles.module';
 import { AdminModule } from './admin/admin.module';
 import { WebsocketModule } from './websocket/websocket.module';
+import { ContractModule } from './contract/contract.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     BattlesModule,
     AdminModule,
     WebsocketModule,
+    ContractModule,
   ],
 })
 export class AppModule {}

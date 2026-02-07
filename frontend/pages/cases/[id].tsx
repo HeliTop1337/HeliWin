@@ -436,7 +436,7 @@ export default function CaseDetail() {
           <h2 className="text-2xl font-bold mb-6">Возможные предметы</h2>
           
           {/* Group items by rarity */}
-          {['LEGENDARY', 'MASTER', 'VETERAN'].map((rarity) => {
+          {['LEGENDARY', 'MASTER', 'VETERAN', 'STALKER'].map((rarity) => {
             const rarityItems = items.filter((item: any) => item.item.rarity === rarity);
             if (rarityItems.length === 0) return null;
             
