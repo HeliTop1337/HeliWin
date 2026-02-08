@@ -3,6 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/crash": "pages/crash.js",
+  "/cases/[id]": "pages/cases/[id].js",
+  "/contract": "pages/contract.js",
   "/": "pages/index.js",
-  "/login": "pages/login.js"
+  "/upgrade": "pages/upgrade.js"
 }

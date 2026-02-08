@@ -4,6 +4,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../lib/api';
 import Link from 'next/link';
+import { getImageUrl } from '../../lib/imageUrl';
 
 export default function AdminItems() {
   const router = useRouter();
@@ -167,7 +168,7 @@ export default function AdminItems() {
               >
                 <div className={`w-full aspect-square rounded-xl bg-gradient-to-br ${getRarityColor(item.rarity)} mb-4 flex items-center justify-center`}>
                   {item.icon ? (
-                    <img src={item.icon} alt={item.name} className="w-20 h-20 object-contain" />
+                    <img src={getImageUrl(item.icon)} alt={item.name} className="w-20 h-20 object-contain" />
                   ) : (
                     <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
@@ -245,12 +246,13 @@ export default function AdminItems() {
                     <select
                       value={formData.rarity}
                       onChange={(e) => setFormData({ ...formData, rarity: e.target.value })}
-                      className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full bg-black/50 border border-white/10 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:1.5rem] bg-[right_0.5rem_center] bg-no-repeat pr-10"
+                      style={{ colorScheme: 'dark' }}
                     >
-                      <option value="STALKER">Сталкерское</option>
-                      <option value="VETERAN">Ветеранское</option>
-                      <option value="MASTER">Мастерское</option>
-                      <option value="LEGENDARY">Легендарное</option>
+                      <option value="STALKER" className="bg-[#1a1a1f] text-white">Сталкерское</option>
+                      <option value="VETERAN" className="bg-[#1a1a1f] text-white">Ветеранское</option>
+                      <option value="MASTER" className="bg-[#1a1a1f] text-white">Мастерское</option>
+                      <option value="LEGENDARY" className="bg-[#1a1a1f] text-white">Легендарное</option>
                     </select>
                   </div>
                   <div>

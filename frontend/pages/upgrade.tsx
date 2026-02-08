@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../store/useAuthStore';
 import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/Toast';
+import UpgradeWheel from '../components/UpgradeWheel';
 import api from '../lib/api';
 
 type MascotState = 'idle' | 'start' | 'process' | 'win' | 'lose';
@@ -341,23 +342,12 @@ export default function Upgrade() {
                 </svg>
               </div>
 
-              <div 
-                className="w-64 h-64 rounded-full flex items-center justify-center relative"
-                style={{
-                  background: 'radial-gradient(circle, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 70%)',
-                  border: '3px solid rgba(139, 92, 246, 0.5)',
-                  boxShadow: '0 0 60px rgba(139, 92, 246, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.5)'
-                }}
-              >
-                <div className="text-center px-6">
-                  <div className="text-4xl font-bold text-white mb-2 break-words leading-tight" style={{ textShadow: '0 0 20px rgba(255, 255, 255, 0.5)' }}>
-                    {getChanceText()}
-                  </div>
-                  {selectedItem && selectedTarget && (
-                    <div className="text-xs text-gray-400">шанс успеха</div>
-                  )}
-                </div>
-              </div>
+              {/* Центральное колесо с процентами */}
+              <UpgradeWheel 
+                chance={selectedTarget?.chance || 50}
+                isSpinning={upgrading}
+                result={result?.success === true ? 'win' : result?.success === false ? 'lose' : null}
+              />
             </motion.div>
 
             {/* Правый слот - целевой предмет */}
@@ -457,42 +447,7 @@ export default function Upgrade() {
           </motion.button>
         </div>
 
-        {/* Рулетка */}
-        <AnimatePresence>
-          {showRoulette && selectedTarget && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="flex justify-center mb-8"
-            >
-              <div className="relative h-16 w-full max-w-2xl rounded-xl overflow-hidden" style={{ background: 'rgba(15, 23, 42, 0.8)' }}>
-                <div 
-                  className="absolute left-0 top-0 h-full flex items-center justify-center text-white font-bold text-xl"
-                  style={{ 
-                    width: `${selectedTarget.chance}%`,
-                    background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)'
-                  }}
-                >
-                  WIN
-                </div>
-                <div 
-                  className="absolute right-0 top-0 h-full flex items-center justify-center text-white font-bold text-xl"
-                  style={{ 
-                    width: `${100 - selectedTarget.chance}%`,
-                    background: 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'
-                  }}
-                >
-                  LOSE
-                </div>
-                <motion.div
-                  className="absolute top-0 w-1 h-full bg-white shadow-lg"
-                  style={{ left: `${roulettePosition}%`, boxShadow: '0 0 20px rgba(255, 255, 255, 0.8)' }}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Рулетка - УДАЛЕНА */}
 
         {/* Результат */}
         <AnimatePresence>

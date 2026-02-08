@@ -17,11 +17,19 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @WebSocketServer()
   server: Server;
 
-  private onlineUsers = new Map<string, string>();
+  private onlineUsers = new Map<string, string>(); // socketId -> userId
+  private onlineIPs = new Map<string, Set<string>>(); // IP -> Set of socketIds
   private recentWins: any[] = []; // Хранилище последних 35 выигрышей
 
   handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
+    const clientIP = this.getClientIP(client);
+    console.log(`Client connected: ${client.id} from IP: ${clientIP}`);
+    
+    // Добавляем socket ID к IP адресу
+    if (!this.onlineIPs.has(clientIP)) {
+      this.onlineIPs.set(clientIP, new Set());
+    }
+    this.onlineIPs.get(clientIP).add(client.id);
     
     // Отправляем последние выигрыши новому клиенту
     if (this.recentWins.length > 0) {
@@ -34,7 +42,19 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
+    const clientIP = this.getClientIP(client);
+    console.log(`Client disconnected: ${client.id} from IP: ${clientIP}`);
+    
+    // Удаляем socket ID из IP адреса
+    if (this.onlineIPs.has(clientIP)) {
+      this.onlineIPs.get(clientIP).delete(client.id);
+      
+      // Если у IP больше нет активных подключений, удаляем IP
+      if (this.onlineIPs.get(clientIP).size === 0) {
+        this.onlineIPs.delete(clientIP);
+      }
+    }
+    
     this.onlineUsers.delete(client.id);
     this.broadcastOnlineCount();
   }
@@ -43,13 +63,44 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   handleUserOnline(client: Socket, userId: string) {
     this.onlineUsers.set(client.id, userId);
     this.broadcastOnlineCount();
-    console.log(`User ${userId} is online. Total online: ${this.onlineUsers.size}`);
+    const clientIP = this.getClientIP(client);
+    console.log(`User ${userId} is online from IP ${clientIP}. Total unique IPs: ${this.onlineIPs.size}`);
   }
 
   @SubscribeMessage('user:offline')
   handleUserOffline(client: Socket) {
     this.onlineUsers.delete(client.id);
     this.broadcastOnlineCount();
+  }
+
+  private getClientIP(client: Socket): string {
+    // Получаем IP из заголовков или handshake
+    const forwarded = client.handshake.headers['x-forwarded-for'];
+    const realIP = client.handshake.headers['x-real-ip'];
+    
+    let ip: string;
+    
+    if (forwarded) {
+      // x-forwarded-for может содержать несколько IP, берем первый
+      ip = Array.isArray(forwarded) ? forwarded[0] : forwarded.split(',')[0].trim();
+    } else if (realIP) {
+      ip = Array.isArray(realIP) ? realIP[0] : realIP;
+    } else {
+      // Fallback на address из handshake
+      ip = client.handshake.address || 'unknown';
+    }
+    
+    // Нормализуем localhost адреса
+    if (ip === '::1' || ip === '::ffff:127.0.0.1' || ip === '127.0.0.1') {
+      return 'localhost';
+    }
+    
+    // Убираем IPv6 префикс для IPv4 адресов
+    if (ip.startsWith('::ffff:')) {
+      return ip.substring(7);
+    }
+    
+    return ip;
   }
 
   broadcastCaseOpened(userId: string, username: string, item: any, caseName: string, casePrice?: number) {
@@ -92,8 +143,13 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   private broadcastOnlineCount() {
+    // Считаем количество уникальных IP адресов
+    const uniqueIPCount = this.onlineIPs.size;
+    
     this.server.emit('online:count', {
-      count: this.onlineUsers.size,
+      count: uniqueIPCount,
     });
+    
+    console.log(`Broadcasting online count: ${uniqueIPCount} unique IPs`);
   }
 }

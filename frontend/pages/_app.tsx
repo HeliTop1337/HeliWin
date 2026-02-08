@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import WinHistory from '../components/WinHistory';
 import { useAuthStore } from '../store/useAuthStore';
 import { useEffect } from 'react';
+import { SocketProvider } from '../contexts/SocketContext';
 
 export default function App({ Component, pageProps }: AppProps) {
   const { accessToken, setAccessToken } = useAuthStore();
@@ -30,12 +31,14 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/logo.png" />
         <link rel="apple-touch-icon" href="/logo.png" />
       </Head>
-      <div className="min-h-screen flex flex-col">
-        <WinHistory />
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
-      </div>
+      <SocketProvider>
+        <div className="min-h-screen flex flex-col">
+          <WinHistory />
+          <Header />
+          <Component {...pageProps} />
+          <Footer />
+        </div>
+      </SocketProvider>
     </>
   );
 }

@@ -1,51 +1,28 @@
 import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { useAuthStore } from '../store/useAuthStore';
+import { useSocket } from '../contexts/SocketContext';
 
 export default function OnlineCounter() {
   const [onlineCount, setOnlineCount] = useState(0);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const { user, isAuthenticated } = useAuthStore();
+  const { socket, isConnected } = useSocket();
 
   useEffect(() => {
-    const newSocket = io(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000', {
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionAttempts: Infinity,
-      transports: ['websocket', 'polling'],
-    });
-    
-    setSocket(newSocket);
+    if (!socket) return;
 
-    newSocket.on('connect', () => {
-      console.log('OnlineCounter: Connected to WebSocket');
-      
-      // Если пользователь авторизован, отправляем его ID
-      if (isAuthenticated && user) {
-        newSocket.emit('user:online', user.id);
-      }
-    });
-
-    newSocket.on('online:count', (data: { count: number }) => {
+    const handleOnlineCount = (data: { count: number }) => {
       console.log('OnlineCounter: Received online count', data.count);
       setOnlineCount(data.count);
-    });
+    };
 
-    newSocket.on('disconnect', () => {
-      console.log('OnlineCounter: Disconnected from WebSocket');
-    });
+    socket.on('online:count', handleOnlineCount);
 
     return () => {
-      if (isAuthenticated && user) {
-        newSocket.emit('user:offline');
-      }
-      newSocket.close();
+      socket.off('online:count', handleOnlineCount);
     };
-  }, [isAuthenticated, user]);
+  }, [socket]);
 
   return (
     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10">
-      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+      <div className={`w-2 h-2 rounded-full animate-pulse ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`} />
       <span className="text-sm font-semibold text-white/90">
         {onlineCount} <span className="text-white/60">Онлайн</span>
       </span>

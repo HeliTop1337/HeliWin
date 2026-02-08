@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { io, Socket } from 'socket.io-client';
+import { useSocket } from '../contexts/SocketContext';
 import { useAuthStore } from '../store/useAuthStore';
 
 interface WinItem {
@@ -18,40 +18,15 @@ interface WinItem {
 
 export default function WinHistory() {
   const [wins, setWins] = useState<WinItem[]>([]);
-  const [lastLegendary, setLastLegendary] = useState<WinItem | null>(null); // Последний легендарный
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [lastLegendary, setLastLegendary] = useState<WinItem | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { socket, isConnected } = useSocket();
   const { user } = useAuthStore();
 
   useEffect(() => {
-    const newSocket = io(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000', {
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: Infinity,
-      transports: ['websocket', 'polling'],
-    });
-    
-    setSocket(newSocket);
+    if (!socket) return;
 
-    newSocket.on('connect', () => {
-      console.log('WinHistory: Connected to WebSocket');
-      setIsConnected(true);
-    });
-
-    newSocket.on('disconnect', () => {
-      console.log('WinHistory: Disconnected from WebSocket');
-      setIsConnected(false);
-    });
-
-    newSocket.on('connect_error', (error) => {
-      console.error('WinHistory: Connection error', error);
-      setIsConnected(false);
-    });
-
-    // Получаем историю последних выигрышей при подключении
-    newSocket.on('recentWins', (recentWins: any[]) => {
+    const handleRecentWins = (recentWins: any[]) => {
       console.log('WinHistory: Received recent wins history', recentWins.length);
       
       const winItems: WinItem[] = recentWins.map((drop: any) => ({
@@ -67,17 +42,15 @@ export default function WinHistory() {
         multiplier: drop.multiplier,
       }));
 
-      // Находим последний легендарный
       const legendary = winItems.find(w => w.itemRarity === 'LEGENDARY');
       if (legendary) {
         setLastLegendary(legendary);
       }
       
-      // Остальные в список (последние 10)
       setWins(winItems.slice(0, 10));
-    });
+    };
 
-    newSocket.on('itemDropped', (drop: any) => {
+    const handleItemDropped = (drop: any) => {
       console.log('WinHistory: Received drop', drop);
       console.log('WinHistory: Item icon path:', drop.itemIcon);
       console.log('WinHistory: Drop userId:', drop.userId, 'Current user:', user?.id);
@@ -103,30 +76,31 @@ export default function WinHistory() {
 
       setTimeout(() => {
         setWins((prev) => {
-          // Проверяем, нет ли уже такого ID в списке (защита от дубликатов)
           const exists = prev.some(w => w.id === winItem.id);
           if (exists) {
             console.log('WinHistory: Duplicate detected, skipping', winItem.id);
             return prev;
           }
           
-          // Добавляем в начало списка (новые слева)
-          const newWins = [winItem, ...prev].slice(0, 10); // Оставляем последние 10
+          const newWins = [winItem, ...prev].slice(0, 10);
           return newWins;
         });
         
-        // Если это легендарный предмет - обновляем карточку
         if (winItem.itemRarity === 'LEGENDARY') {
           console.log('WinHistory: New legendary item!', winItem.itemName);
           setLastLegendary(winItem);
         }
       }, delay);
-    });
+    };
+
+    socket.on('recentWins', handleRecentWins);
+    socket.on('itemDropped', handleItemDropped);
 
     return () => {
-      newSocket.close();
+      socket.off('recentWins', handleRecentWins);
+      socket.off('itemDropped', handleItemDropped);
     };
-  }, [user]);
+  }, [socket, user]);
 
   // Автоматическая прокрутка при добавлении новых элементов
   useEffect(() => {

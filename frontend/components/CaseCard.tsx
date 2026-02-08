@@ -37,17 +37,20 @@ export default function CaseCard({ caseData }: CaseCardProps) {
 
       {/* Icon container */}
       <div className="aspect-square bg-background/50 flex items-center justify-center overflow-hidden relative">
-        {caseData.icon ? (
-          <img 
-            src={getImageUrl(caseData.icon)} 
-            alt={caseData.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            onError={(e) => {
-              // Fallback to SVG icon if image fails to load
-              e.currentTarget.style.display = 'none';
-              const parent = e.currentTarget.parentElement;
-              if (parent) {
-                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        {caseData.icon && (caseData.icon.includes('.') || caseData.icon.startsWith('/')) ? (
+          <> 
+            {/* Само изображение - меньший размер чтобы скрыть черные края */}
+            <img 
+              src={getImageUrl(caseData.icon)} 
+              alt={caseData.name}
+              className="w-[70%] h-[70%] object-contain group-hover:scale-105 transition-transform duration-500"
+              onError={(e) => {
+                // Fallback to SVG icon if image fails to load
+                console.error('Failed to load image:', caseData.icon);
+                e.currentTarget.style.display = 'none';
+                const parent = e.currentTarget.parentElement;
+                if (parent) {
+                  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 svg.setAttribute('class', 'w-32 h-32 text-primary drop-shadow-lg');
                 svg.setAttribute('fill', 'currentColor');
                 svg.setAttribute('viewBox', '0 0 24 24');
@@ -56,6 +59,9 @@ export default function CaseCard({ caseData }: CaseCardProps) {
               }
             }}
           />
+          </>
+        ) : caseData.icon ? (
+          <div className="text-8xl">{caseData.icon}</div>
         ) : (
           <div className="w-32 h-32">
             <svg className="w-full h-full text-primary drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">

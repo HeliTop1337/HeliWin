@@ -50,11 +50,11 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[#0a0a0f]">
       {/* Background effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl" />
       </div>
 
       <motion.div
@@ -62,14 +62,14 @@ export default function Register() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="glass rounded-3xl p-8 shadow-2xl">
+        <div className="bg-black/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 shadow-2xl">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="text-4xl font-black bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 bg-clip-text text-transparent inline-block mb-2">
+            <div className="text-5xl font-black bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 bg-clip-text text-transparent inline-block mb-4">
               HeliWin
             </div>
-            <h2 className="text-2xl font-bold mb-2">Создать аккаунт</h2>
-            <p className="text-muted-foreground">Присоединяйся к тысячам игроков!</p>
+            <h2 className="text-2xl font-bold text-white mb-2">Создать аккаунт</h2>
+            <p className="text-gray-400">Присоединяйся к тысячам игроков!</p>
           </div>
 
           {/* Error message */}
@@ -77,16 +77,16 @@ export default function Register() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="bg-destructive/10 border border-destructive/50 text-destructive px-4 py-3 rounded-xl mb-6"
+              className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl mb-6"
             >
               {error}
             </motion.div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-semibold mb-2 text-white">
                 Имя пользователя
               </label>
               <input
@@ -94,13 +94,13 @@ export default function Register() {
                 required
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition"
+                className="w-full bg-black/50 border border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder:text-gray-500"
                 placeholder="Ваше имя"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-semibold mb-2 text-white">
                 Email
               </label>
               <input
@@ -108,13 +108,13 @@ export default function Register() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition"
+                className="w-full bg-black/50 border border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder:text-gray-500"
                 placeholder="your@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-semibold mb-2 text-white">
                 Пароль
               </label>
               <input
@@ -122,13 +122,13 @@ export default function Register() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition"
+                className="w-full bg-black/50 border border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder:text-gray-500"
                 placeholder="••••••••"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-semibold mb-2 text-white">
                 Подтвердите пароль
               </label>
               <input
@@ -136,7 +136,7 @@ export default function Register() {
                 required
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                className="w-full glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition"
+                className="w-full bg-black/50 border border-white/10 text-white px-4 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition placeholder:text-gray-500"
                 placeholder="••••••••"
               />
             </div>
@@ -146,7 +146,7 @@ export default function Register() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={loading}
-              className="w-full btn-primary glow-purple disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
@@ -165,8 +165,8 @@ export default function Register() {
 
           {/* Login link */}
           <div className="mt-6 text-center">
-            <span className="text-muted-foreground">Уже есть аккаунт? </span>
-            <Link href="/login" className="text-primary hover:underline font-semibold">
+            <span className="text-gray-400">Уже есть аккаунт? </span>
+            <Link href="/login" className="text-purple-400 hover:text-purple-300 font-semibold transition">
               Войти
             </Link>
           </div>

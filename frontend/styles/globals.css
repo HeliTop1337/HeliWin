@@ -255,3 +255,31 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #9333ea, #db2777);
 }
+
+/* Анимации для карточек кейсов */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.delay-75 {
+  animation-delay: 75ms;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+/* Улучшенное свечение для эксклюзивного кейса */
+.exclusive-glow {
+  box-shadow: 
+    0 0 20px rgba(168, 85, 247, 0.4),
+    0 0 40px rgba(236, 72, 153, 0.3),
+    0 0 60px rgba(239, 68, 68, 0.2);
+}

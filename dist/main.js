@@ -21,7 +21,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b, _c, _d, _e;
+var _a, _b, _c, _d, _e, _f, _g, _h, _j;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AdminController = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
@@ -86,8 +86,53 @@ let AdminController = class AdminController {
     getAllCases() {
         return this.adminService.getAllCases();
     }
-    updateCase(caseId, updateData, req) {
+    createCase(data, file, req) {
+        let iconUrl = data.icon || '';
+        if (file) {
+            iconUrl = `/uploads/cases/${file.filename}`;
+        }
+        const createData = {
+            name: data.name,
+            description: data.description || '',
+            price: parseFloat(data.price),
+            discount: data.discount ? parseFloat(data.discount) : 0,
+            icon: iconUrl,
+            isActive: data.isActive === 'true' || data.isActive === true,
+        };
+        return this.adminService.createCase(createData, req.user.id);
+    }
+    updateCase(caseId, data, file, req) {
+        let iconUrl = data.icon || undefined;
+        if (file) {
+            iconUrl = `/uploads/cases/${file.filename}`;
+        }
+        const updateData = {};
+        if (data.name)
+            updateData.name = data.name;
+        if (data.description !== undefined)
+            updateData.description = data.description;
+        if (data.price)
+            updateData.price = parseFloat(data.price);
+        if (data.discount !== undefined)
+            updateData.discount = parseFloat(data.discount);
+        if (iconUrl)
+            updateData.icon = iconUrl;
+        if (data.isActive !== undefined) {
+            updateData.isActive = data.isActive === 'true' || data.isActive === true;
+        }
         return this.adminService.updateCase(caseId, updateData, req.user.id);
+    }
+    deleteCase(caseId, req) {
+        return this.adminService.deleteCase(caseId, req.user.id);
+    }
+    addItemToCase(caseId, data, req) {
+        return this.adminService.addItemToCase(caseId, data.itemId, data.dropChance, req.user.id);
+    }
+    removeItemFromCase(caseId, itemId, req) {
+        return this.adminService.removeItemFromCase(caseId, itemId, req.user.id);
+    }
+    updateCaseItemChance(caseId, itemId, data, req) {
+        return this.adminService.updateCaseItemChance(caseId, itemId, data.dropChance, req.user.id);
     }
     getAllPromoCodes() {
         return this.adminService.getAllPromoCodes();
@@ -199,14 +244,78 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AdminController.prototype, "getAllCases", null);
 __decorate([
+    (0, common_1.Post)('cases'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('icon', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './uploads/cases',
+            filename: (req, file, cb) => {
+                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+                cb(null, `${randomName}${(0, path_1.extname)(file.originalname)}`);
+            },
+        }),
+    })),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, typeof (_g = typeof Express !== "undefined" && (_f = Express.Multer) !== void 0 && _f.File) === "function" ? _g : Object, Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "createCase", null);
+__decorate([
     (0, common_1.Patch)('cases/:id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('icon', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './uploads/cases',
+            filename: (req, file, cb) => {
+                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+                cb(null, `${randomName}${(0, path_1.extname)(file.originalname)}`);
+            },
+        }),
+    })),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)()),
+    __param(3, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, typeof (_j = typeof Express !== "undefined" && (_h = Express.Multer) !== void 0 && _h.File) === "function" ? _j : Object, Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "updateCase", null);
+__decorate([
+    (0, common_1.Delete)('cases/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "deleteCase", null);
+__decorate([
+    (0, common_1.Post)('cases/:id/items'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __param(2, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", void 0)
-], AdminController.prototype, "updateCase", null);
+], AdminController.prototype, "addItemToCase", null);
+__decorate([
+    (0, common_1.Delete)('cases/:caseId/items/:itemId'),
+    __param(0, (0, common_1.Param)('caseId')),
+    __param(1, (0, common_1.Param)('itemId')),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "removeItemFromCase", null);
+__decorate([
+    (0, common_1.Patch)('cases/:caseId/items/:itemId'),
+    __param(0, (0, common_1.Param)('caseId')),
+    __param(1, (0, common_1.Param)('itemId')),
+    __param(2, (0, common_1.Body)()),
+    __param(3, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object, Object]),
+    __metadata("design:returntype", void 0)
+], AdminController.prototype, "updateCaseItemChance", null);
 __decorate([
     (0, common_1.Get)('promo-codes'),
     __metadata("design:type", Function),
@@ -305,24 +414,79 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AdminService = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const prisma_service_1 = __webpack_require__(/*! ../prisma/prisma.service */ "./backend/prisma/prisma.service.ts");
+const promises_1 = __webpack_require__(/*! fs/promises */ "fs/promises");
+const path_1 = __webpack_require__(/*! path */ "path");
 let AdminService = class AdminService {
     constructor(prisma) {
         this.prisma = prisma;
     }
     async createCase(data, adminId) {
         const caseData = await this.prisma.case.create({ data });
-        await this.logAction(adminId, 'CREATE_CASE', 'Case', caseData.id);
+        await this.logAction(adminId, 'CREATE_CASE', 'Case', caseData.id, `Создан кейс: ${data.name}`);
         return caseData;
     }
     async updateCase(id, data, adminId) {
+        if (data.icon) {
+            const oldCase = await this.prisma.case.findUnique({ where: { id } });
+            if (oldCase?.icon && oldCase.icon.startsWith('/uploads/')) {
+                await this.deleteFile(oldCase.icon);
+            }
+        }
         const caseData = await this.prisma.case.update({ where: { id }, data });
-        await this.logAction(adminId, 'UPDATE_CASE', 'Case', id);
+        await this.logAction(adminId, 'UPDATE_CASE', 'Case', id, `Обновлен кейс: ${caseData.name}`);
         return caseData;
     }
     async deleteCase(id, adminId) {
+        const caseData = await this.prisma.case.findUnique({ where: { id } });
+        if (caseData?.icon && caseData.icon.startsWith('/uploads/')) {
+            await this.deleteFile(caseData.icon);
+        }
         await this.prisma.case.delete({ where: { id } });
-        await this.logAction(adminId, 'DELETE_CASE', 'Case', id);
+        await this.logAction(adminId, 'DELETE_CASE', 'Case', id, `Удален кейс: ${caseData?.name}`);
         return { message: 'Кейс удален' };
+    }
+    async addItemToCase(caseId, itemId, dropChance, adminId) {
+        const caseItem = await this.prisma.caseItem.create({
+            data: {
+                caseId,
+                itemId,
+                dropChance,
+            },
+            include: {
+                item: true,
+                case: true,
+            },
+        });
+        await this.logAction(adminId, 'ADD_ITEM_TO_CASE', 'CaseItem', caseItem.id, `Добавлен предмет ${caseItem.item.name} в кейс ${caseItem.case.name}`);
+        return caseItem;
+    }
+    async removeItemFromCase(caseId, itemId, adminId) {
+        const caseItem = await this.prisma.caseItem.findFirst({
+            where: { caseId, itemId },
+            include: { item: true, case: true },
+        });
+        if (caseItem) {
+            await this.prisma.caseItem.delete({
+                where: { id: caseItem.id },
+            });
+            await this.logAction(adminId, 'REMOVE_ITEM_FROM_CASE', 'CaseItem', caseItem.id, `Удален предмет ${caseItem.item.name} из кейса ${caseItem.case.name}`);
+        }
+        return { message: 'Предмет удален из кейса' };
+    }
+    async updateCaseItemChance(caseId, itemId, dropChance, adminId) {
+        const caseItem = await this.prisma.caseItem.findFirst({
+            where: { caseId, itemId },
+        });
+        if (!caseItem) {
+            throw new common_1.NotFoundException('Предмет не найден в кейсе');
+        }
+        const updated = await this.prisma.caseItem.update({
+            where: { id: caseItem.id },
+            data: { dropChance },
+            include: { item: true, case: true },
+        });
+        await this.logAction(adminId, 'UPDATE_CASE_ITEM_CHANCE', 'CaseItem', updated.id, `Обновлен шанс предмета ${updated.item.name} в кейсе ${updated.case.name}: ${dropChance}%`);
+        return updated;
     }
     async getAllCases() {
         return this.prisma.case.findMany({
@@ -340,11 +504,21 @@ let AdminService = class AdminService {
         return item;
     }
     async updateItem(id, data, adminId) {
+        if (data.icon) {
+            const oldItem = await this.prisma.item.findUnique({ where: { id } });
+            if (oldItem?.icon && oldItem.icon.startsWith('/uploads/')) {
+                await this.deleteFile(oldItem.icon);
+            }
+        }
         const item = await this.prisma.item.update({ where: { id }, data });
         await this.logAction(adminId, 'UPDATE_ITEM', 'Item', id);
         return item;
     }
     async deleteItem(id, adminId) {
+        const item = await this.prisma.item.findUnique({ where: { id } });
+        if (item?.icon && item.icon.startsWith('/uploads/')) {
+            await this.deleteFile(item.icon);
+        }
         await this.prisma.item.delete({ where: { id } });
         await this.logAction(adminId, 'DELETE_ITEM', 'Item', id);
         return { message: 'Предмет удален' };
@@ -505,6 +679,15 @@ let AdminService = class AdminService {
             take: limit,
             orderBy: { createdAt: 'desc' },
         });
+    }
+    async deleteFile(filePath) {
+        try {
+            const fullPath = (0, path_1.join)(process.cwd(), filePath);
+            await (0, promises_1.unlink)(fullPath);
+        }
+        catch (error) {
+            console.error(`Failed to delete file ${filePath}:`, error);
+        }
     }
     async logAction(adminId, action, targetType, targetId, details) {
         await this.prisma.adminLog.create({
@@ -832,8 +1015,11 @@ let AuthService = class AuthService {
         return { user, ...tokens };
     }
     async login(dto) {
-        const user = await this.prisma.user.findUnique({
-            where: { email: dto.email },
+        const isEmail = dto.login.includes('@');
+        const user = await this.prisma.user.findFirst({
+            where: isEmail
+                ? { email: dto.login }
+                : { username: dto.login },
         });
         if (!user) {
             throw new common_1.UnauthorizedException('Неверные учетные данные');
@@ -971,9 +1157,10 @@ class LoginDto {
 }
 exports.LoginDto = LoginDto;
 __decorate([
-    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(3),
     __metadata("design:type", String)
-], LoginDto.prototype, "email", void 0);
+], LoginDto.prototype, "login", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
@@ -2603,7 +2790,10 @@ const helmet_1 = __importDefault(__webpack_require__(/*! helmet */ "helmet"));
 const path_1 = __webpack_require__(/*! path */ "path");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.useStaticAssets((0, path_1.join)(__dirname, '..', 'uploads'), {
+    const uploadsPath = process.env.NODE_ENV === 'production'
+        ? (0, path_1.join)(__dirname, '..', 'uploads')
+        : (0, path_1.join)(process.cwd(), 'uploads');
+    app.useStaticAssets(uploadsPath, {
         prefix: '/uploads/',
     });
     app.use((0, helmet_1.default)({
@@ -3322,7 +3512,7 @@ exports.UsersController = void 0;
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const platform_express_1 = __webpack_require__(/*! @nestjs/platform-express */ "@nestjs/platform-express");
 const multer_1 = __webpack_require__(/*! multer */ "multer");
-const uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist-node/index.js");
+const uuid_1 = __webpack_require__(/*! uuid */ "uuid");
 const path_1 = __webpack_require__(/*! path */ "path");
 const users_service_1 = __webpack_require__(/*! ./users.service */ "./backend/users/users.service.ts");
 const jwt_auth_guard_1 = __webpack_require__(/*! ../auth/guards/jwt-auth.guard */ "./backend/auth/guards/jwt-auth.guard.ts");
@@ -3934,10 +4124,16 @@ const socket_io_1 = __webpack_require__(/*! socket.io */ "socket.io");
 let WebsocketGateway = class WebsocketGateway {
     constructor() {
         this.onlineUsers = new Map();
+        this.onlineIPs = new Map();
         this.recentWins = [];
     }
     handleConnection(client) {
-        console.log(`Client connected: ${client.id}`);
+        const clientIP = this.getClientIP(client);
+        console.log(`Client connected: ${client.id} from IP: ${clientIP}`);
+        if (!this.onlineIPs.has(clientIP)) {
+            this.onlineIPs.set(clientIP, new Set());
+        }
+        this.onlineIPs.get(clientIP).add(client.id);
         if (this.recentWins.length > 0) {
             client.emit('recentWins', this.recentWins);
             console.log(`Sent ${this.recentWins.length} recent wins to client ${client.id}`);
@@ -3945,18 +4141,47 @@ let WebsocketGateway = class WebsocketGateway {
         this.broadcastOnlineCount();
     }
     handleDisconnect(client) {
-        console.log(`Client disconnected: ${client.id}`);
+        const clientIP = this.getClientIP(client);
+        console.log(`Client disconnected: ${client.id} from IP: ${clientIP}`);
+        if (this.onlineIPs.has(clientIP)) {
+            this.onlineIPs.get(clientIP).delete(client.id);
+            if (this.onlineIPs.get(clientIP).size === 0) {
+                this.onlineIPs.delete(clientIP);
+            }
+        }
         this.onlineUsers.delete(client.id);
         this.broadcastOnlineCount();
     }
     handleUserOnline(client, userId) {
         this.onlineUsers.set(client.id, userId);
         this.broadcastOnlineCount();
-        console.log(`User ${userId} is online. Total online: ${this.onlineUsers.size}`);
+        const clientIP = this.getClientIP(client);
+        console.log(`User ${userId} is online from IP ${clientIP}. Total unique IPs: ${this.onlineIPs.size}`);
     }
     handleUserOffline(client) {
         this.onlineUsers.delete(client.id);
         this.broadcastOnlineCount();
+    }
+    getClientIP(client) {
+        const forwarded = client.handshake.headers['x-forwarded-for'];
+        const realIP = client.handshake.headers['x-real-ip'];
+        let ip;
+        if (forwarded) {
+            ip = Array.isArray(forwarded) ? forwarded[0] : forwarded.split(',')[0].trim();
+        }
+        else if (realIP) {
+            ip = Array.isArray(realIP) ? realIP[0] : realIP;
+        }
+        else {
+            ip = client.handshake.address || 'unknown';
+        }
+        if (ip === '::1' || ip === '::ffff:127.0.0.1' || ip === '127.0.0.1') {
+            return 'localhost';
+        }
+        if (ip.startsWith('::ffff:')) {
+            return ip.substring(7);
+        }
+        return ip;
     }
     broadcastCaseOpened(userId, username, item, caseName, casePrice) {
         const multiplier = casePrice && casePrice > 0 ? item.basePrice / casePrice : 0;
@@ -3986,9 +4211,11 @@ let WebsocketGateway = class WebsocketGateway {
         this.server.emit(`user:${userId}:balance`, { balance });
     }
     broadcastOnlineCount() {
+        const uniqueIPCount = this.onlineIPs.size;
         this.server.emit('online:count', {
-            count: this.onlineUsers.size,
+            count: uniqueIPCount,
         });
+        console.log(`Broadcasting online count: ${uniqueIPCount} unique IPs`);
     }
 };
 exports.WebsocketGateway = WebsocketGateway;
@@ -4236,6 +4463,16 @@ module.exports = require("socket.io");
 
 /***/ }),
 
+/***/ "uuid":
+/*!***********************!*\
+  !*** external "uuid" ***!
+  \***********************/
+/***/ ((module) => {
+
+module.exports = require("uuid");
+
+/***/ }),
+
 /***/ "fs":
 /*!*********************!*\
   !*** external "fs" ***!
@@ -4246,13 +4483,13 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ "node:crypto":
+/***/ "fs/promises":
 /*!******************************!*\
-  !*** external "node:crypto" ***!
+  !*** external "fs/promises" ***!
   \******************************/
 /***/ ((module) => {
 
-module.exports = require("node:crypto");
+module.exports = require("fs/promises");
 
 /***/ }),
 
@@ -4263,742 +4500,6 @@ module.exports = require("node:crypto");
 /***/ ((module) => {
 
 module.exports = require("path");
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/index.js":
-/*!**********************************************!*\
-  !*** ./node_modules/uuid/dist-node/index.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   MAX: () => (/* reexport safe */ _max_js__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   NIL: () => (/* reexport safe */ _nil_js__WEBPACK_IMPORTED_MODULE_1__["default"]),
-/* harmony export */   parse: () => (/* reexport safe */ _parse_js__WEBPACK_IMPORTED_MODULE_2__["default"]),
-/* harmony export */   stringify: () => (/* reexport safe */ _stringify_js__WEBPACK_IMPORTED_MODULE_3__["default"]),
-/* harmony export */   v1: () => (/* reexport safe */ _v1_js__WEBPACK_IMPORTED_MODULE_4__["default"]),
-/* harmony export */   v1ToV6: () => (/* reexport safe */ _v1ToV6_js__WEBPACK_IMPORTED_MODULE_5__["default"]),
-/* harmony export */   v3: () => (/* reexport safe */ _v3_js__WEBPACK_IMPORTED_MODULE_6__["default"]),
-/* harmony export */   v4: () => (/* reexport safe */ _v4_js__WEBPACK_IMPORTED_MODULE_7__["default"]),
-/* harmony export */   v5: () => (/* reexport safe */ _v5_js__WEBPACK_IMPORTED_MODULE_8__["default"]),
-/* harmony export */   v6: () => (/* reexport safe */ _v6_js__WEBPACK_IMPORTED_MODULE_9__["default"]),
-/* harmony export */   v6ToV1: () => (/* reexport safe */ _v6ToV1_js__WEBPACK_IMPORTED_MODULE_10__["default"]),
-/* harmony export */   v7: () => (/* reexport safe */ _v7_js__WEBPACK_IMPORTED_MODULE_11__["default"]),
-/* harmony export */   validate: () => (/* reexport safe */ _validate_js__WEBPACK_IMPORTED_MODULE_12__["default"]),
-/* harmony export */   version: () => (/* reexport safe */ _version_js__WEBPACK_IMPORTED_MODULE_13__["default"])
-/* harmony export */ });
-/* harmony import */ var _max_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./max.js */ "./node_modules/uuid/dist-node/max.js");
-/* harmony import */ var _nil_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nil.js */ "./node_modules/uuid/dist-node/nil.js");
-/* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./parse.js */ "./node_modules/uuid/dist-node/parse.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-/* harmony import */ var _v1_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./v1.js */ "./node_modules/uuid/dist-node/v1.js");
-/* harmony import */ var _v1ToV6_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./v1ToV6.js */ "./node_modules/uuid/dist-node/v1ToV6.js");
-/* harmony import */ var _v3_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./v3.js */ "./node_modules/uuid/dist-node/v3.js");
-/* harmony import */ var _v4_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./v4.js */ "./node_modules/uuid/dist-node/v4.js");
-/* harmony import */ var _v5_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./v5.js */ "./node_modules/uuid/dist-node/v5.js");
-/* harmony import */ var _v6_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./v6.js */ "./node_modules/uuid/dist-node/v6.js");
-/* harmony import */ var _v6ToV1_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./v6ToV1.js */ "./node_modules/uuid/dist-node/v6ToV1.js");
-/* harmony import */ var _v7_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./v7.js */ "./node_modules/uuid/dist-node/v7.js");
-/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist-node/validate.js");
-/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./version.js */ "./node_modules/uuid/dist-node/version.js");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/max.js":
-/*!********************************************!*\
-  !*** ./node_modules/uuid/dist-node/max.js ***!
-  \********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ('ffffffff-ffff-ffff-ffff-ffffffffffff');
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/md5.js":
-/*!********************************************!*\
-  !*** ./node_modules/uuid/dist-node/md5.js ***!
-  \********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! node:crypto */ "node:crypto");
-
-function md5(bytes) {
-    if (Array.isArray(bytes)) {
-        bytes = Buffer.from(bytes);
-    }
-    else if (typeof bytes === 'string') {
-        bytes = Buffer.from(bytes, 'utf8');
-    }
-    return (0,node_crypto__WEBPACK_IMPORTED_MODULE_0__.createHash)('md5').update(bytes).digest();
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (md5);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/native.js":
-/*!***********************************************!*\
-  !*** ./node_modules/uuid/dist-node/native.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! node:crypto */ "node:crypto");
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ randomUUID: node_crypto__WEBPACK_IMPORTED_MODULE_0__.randomUUID });
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/nil.js":
-/*!********************************************!*\
-  !*** ./node_modules/uuid/dist-node/nil.js ***!
-  \********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ('00000000-0000-0000-0000-000000000000');
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/parse.js":
-/*!**********************************************!*\
-  !*** ./node_modules/uuid/dist-node/parse.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist-node/validate.js");
-
-function parse(uuid) {
-    if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__["default"])(uuid)) {
-        throw TypeError('Invalid UUID');
-    }
-    let v;
-    return Uint8Array.of((v = parseInt(uuid.slice(0, 8), 16)) >>> 24, (v >>> 16) & 0xff, (v >>> 8) & 0xff, v & 0xff, (v = parseInt(uuid.slice(9, 13), 16)) >>> 8, v & 0xff, (v = parseInt(uuid.slice(14, 18), 16)) >>> 8, v & 0xff, (v = parseInt(uuid.slice(19, 23), 16)) >>> 8, v & 0xff, ((v = parseInt(uuid.slice(24, 36), 16)) / 0x10000000000) & 0xff, (v / 0x100000000) & 0xff, (v >>> 24) & 0xff, (v >>> 16) & 0xff, (v >>> 8) & 0xff, v & 0xff);
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (parse);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/regex.js":
-/*!**********************************************!*\
-  !*** ./node_modules/uuid/dist-node/regex.js ***!
-  \**********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (/^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/i);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/rng.js":
-/*!********************************************!*\
-  !*** ./node_modules/uuid/dist-node/rng.js ***!
-  \********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ rng)
-/* harmony export */ });
-/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! node:crypto */ "node:crypto");
-
-const rnds8Pool = new Uint8Array(256);
-let poolPtr = rnds8Pool.length;
-function rng() {
-    if (poolPtr > rnds8Pool.length - 16) {
-        (0,node_crypto__WEBPACK_IMPORTED_MODULE_0__.randomFillSync)(rnds8Pool);
-        poolPtr = 0;
-    }
-    return rnds8Pool.slice(poolPtr, (poolPtr += 16));
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/sha1.js":
-/*!*********************************************!*\
-  !*** ./node_modules/uuid/dist-node/sha1.js ***!
-  \*********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var node_crypto__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! node:crypto */ "node:crypto");
-
-function sha1(bytes) {
-    if (Array.isArray(bytes)) {
-        bytes = Buffer.from(bytes);
-    }
-    else if (typeof bytes === 'string') {
-        bytes = Buffer.from(bytes, 'utf8');
-    }
-    return (0,node_crypto__WEBPACK_IMPORTED_MODULE_0__.createHash)('sha1').update(bytes).digest();
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sha1);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/stringify.js":
-/*!**************************************************!*\
-  !*** ./node_modules/uuid/dist-node/stringify.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   unsafeStringify: () => (/* binding */ unsafeStringify)
-/* harmony export */ });
-/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist-node/validate.js");
-
-const byteToHex = [];
-for (let i = 0; i < 256; ++i) {
-    byteToHex.push((i + 0x100).toString(16).slice(1));
-}
-function unsafeStringify(arr, offset = 0) {
-    return (byteToHex[arr[offset + 0]] +
-        byteToHex[arr[offset + 1]] +
-        byteToHex[arr[offset + 2]] +
-        byteToHex[arr[offset + 3]] +
-        '-' +
-        byteToHex[arr[offset + 4]] +
-        byteToHex[arr[offset + 5]] +
-        '-' +
-        byteToHex[arr[offset + 6]] +
-        byteToHex[arr[offset + 7]] +
-        '-' +
-        byteToHex[arr[offset + 8]] +
-        byteToHex[arr[offset + 9]] +
-        '-' +
-        byteToHex[arr[offset + 10]] +
-        byteToHex[arr[offset + 11]] +
-        byteToHex[arr[offset + 12]] +
-        byteToHex[arr[offset + 13]] +
-        byteToHex[arr[offset + 14]] +
-        byteToHex[arr[offset + 15]]).toLowerCase();
-}
-function stringify(arr, offset = 0) {
-    const uuid = unsafeStringify(arr, offset);
-    if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__["default"])(uuid)) {
-        throw TypeError('Stringified UUID is invalid');
-    }
-    return uuid;
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (stringify);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v1.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v1.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   updateV1State: () => (/* binding */ updateV1State)
-/* harmony export */ });
-/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist-node/rng.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-
-
-const _state = {};
-function v1(options, buf, offset) {
-    let bytes;
-    const isV6 = options?._v6 ?? false;
-    if (options) {
-        const optionsKeys = Object.keys(options);
-        if (optionsKeys.length === 1 && optionsKeys[0] === '_v6') {
-            options = undefined;
-        }
-    }
-    if (options) {
-        bytes = v1Bytes(options.random ?? options.rng?.() ?? (0,_rng_js__WEBPACK_IMPORTED_MODULE_0__["default"])(), options.msecs, options.nsecs, options.clockseq, options.node, buf, offset);
-    }
-    else {
-        const now = Date.now();
-        const rnds = (0,_rng_js__WEBPACK_IMPORTED_MODULE_0__["default"])();
-        updateV1State(_state, now, rnds);
-        bytes = v1Bytes(rnds, _state.msecs, _state.nsecs, isV6 ? undefined : _state.clockseq, isV6 ? undefined : _state.node, buf, offset);
-    }
-    return buf ?? (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__.unsafeStringify)(bytes);
-}
-function updateV1State(state, now, rnds) {
-    state.msecs ??= -Infinity;
-    state.nsecs ??= 0;
-    if (now === state.msecs) {
-        state.nsecs++;
-        if (state.nsecs >= 10000) {
-            state.node = undefined;
-            state.nsecs = 0;
-        }
-    }
-    else if (now > state.msecs) {
-        state.nsecs = 0;
-    }
-    else if (now < state.msecs) {
-        state.node = undefined;
-    }
-    if (!state.node) {
-        state.node = rnds.slice(10, 16);
-        state.node[0] |= 0x01;
-        state.clockseq = ((rnds[8] << 8) | rnds[9]) & 0x3fff;
-    }
-    state.msecs = now;
-    return state;
-}
-function v1Bytes(rnds, msecs, nsecs, clockseq, node, buf, offset = 0) {
-    if (rnds.length < 16) {
-        throw new Error('Random bytes length must be >= 16');
-    }
-    if (!buf) {
-        buf = new Uint8Array(16);
-        offset = 0;
-    }
-    else {
-        if (offset < 0 || offset + 16 > buf.length) {
-            throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);
-        }
-    }
-    msecs ??= Date.now();
-    nsecs ??= 0;
-    clockseq ??= ((rnds[8] << 8) | rnds[9]) & 0x3fff;
-    node ??= rnds.slice(10, 16);
-    msecs += 12219292800000;
-    const tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
-    buf[offset++] = (tl >>> 24) & 0xff;
-    buf[offset++] = (tl >>> 16) & 0xff;
-    buf[offset++] = (tl >>> 8) & 0xff;
-    buf[offset++] = tl & 0xff;
-    const tmh = ((msecs / 0x100000000) * 10000) & 0xfffffff;
-    buf[offset++] = (tmh >>> 8) & 0xff;
-    buf[offset++] = tmh & 0xff;
-    buf[offset++] = ((tmh >>> 24) & 0xf) | 0x10;
-    buf[offset++] = (tmh >>> 16) & 0xff;
-    buf[offset++] = (clockseq >>> 8) | 0x80;
-    buf[offset++] = clockseq & 0xff;
-    for (let n = 0; n < 6; ++n) {
-        buf[offset++] = node[n];
-    }
-    return buf;
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v1);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v1ToV6.js":
-/*!***********************************************!*\
-  !*** ./node_modules/uuid/dist-node/v1ToV6.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ v1ToV6)
-/* harmony export */ });
-/* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parse.js */ "./node_modules/uuid/dist-node/parse.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-
-
-function v1ToV6(uuid) {
-    const v1Bytes = typeof uuid === 'string' ? (0,_parse_js__WEBPACK_IMPORTED_MODULE_0__["default"])(uuid) : uuid;
-    const v6Bytes = _v1ToV6(v1Bytes);
-    return typeof uuid === 'string' ? (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__.unsafeStringify)(v6Bytes) : v6Bytes;
-}
-function _v1ToV6(v1Bytes) {
-    return Uint8Array.of(((v1Bytes[6] & 0x0f) << 4) | ((v1Bytes[7] >> 4) & 0x0f), ((v1Bytes[7] & 0x0f) << 4) | ((v1Bytes[4] & 0xf0) >> 4), ((v1Bytes[4] & 0x0f) << 4) | ((v1Bytes[5] & 0xf0) >> 4), ((v1Bytes[5] & 0x0f) << 4) | ((v1Bytes[0] & 0xf0) >> 4), ((v1Bytes[0] & 0x0f) << 4) | ((v1Bytes[1] & 0xf0) >> 4), ((v1Bytes[1] & 0x0f) << 4) | ((v1Bytes[2] & 0xf0) >> 4), 0x60 | (v1Bytes[2] & 0x0f), v1Bytes[3], v1Bytes[8], v1Bytes[9], v1Bytes[10], v1Bytes[11], v1Bytes[12], v1Bytes[13], v1Bytes[14], v1Bytes[15]);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v3.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v3.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   DNS: () => (/* reexport safe */ _v35_js__WEBPACK_IMPORTED_MODULE_0__.DNS),
-/* harmony export */   URL: () => (/* reexport safe */ _v35_js__WEBPACK_IMPORTED_MODULE_0__.URL),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _md5_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./md5.js */ "./node_modules/uuid/dist-node/md5.js");
-/* harmony import */ var _v35_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v35.js */ "./node_modules/uuid/dist-node/v35.js");
-
-
-
-function v3(value, namespace, buf, offset) {
-    return (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__["default"])(0x30, _md5_js__WEBPACK_IMPORTED_MODULE_1__["default"], value, namespace, buf, offset);
-}
-v3.DNS = _v35_js__WEBPACK_IMPORTED_MODULE_0__.DNS;
-v3.URL = _v35_js__WEBPACK_IMPORTED_MODULE_0__.URL;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v3);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v35.js":
-/*!********************************************!*\
-  !*** ./node_modules/uuid/dist-node/v35.js ***!
-  \********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   DNS: () => (/* binding */ DNS),
-/* harmony export */   URL: () => (/* binding */ URL),
-/* harmony export */   "default": () => (/* binding */ v35),
-/* harmony export */   stringToBytes: () => (/* binding */ stringToBytes)
-/* harmony export */ });
-/* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parse.js */ "./node_modules/uuid/dist-node/parse.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-
-
-function stringToBytes(str) {
-    str = unescape(encodeURIComponent(str));
-    const bytes = new Uint8Array(str.length);
-    for (let i = 0; i < str.length; ++i) {
-        bytes[i] = str.charCodeAt(i);
-    }
-    return bytes;
-}
-const DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
-const URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-function v35(version, hash, value, namespace, buf, offset) {
-    const valueBytes = typeof value === 'string' ? stringToBytes(value) : value;
-    const namespaceBytes = typeof namespace === 'string' ? (0,_parse_js__WEBPACK_IMPORTED_MODULE_0__["default"])(namespace) : namespace;
-    if (typeof namespace === 'string') {
-        namespace = (0,_parse_js__WEBPACK_IMPORTED_MODULE_0__["default"])(namespace);
-    }
-    if (namespace?.length !== 16) {
-        throw TypeError('Namespace must be array-like (16 iterable integer values, 0-255)');
-    }
-    let bytes = new Uint8Array(16 + valueBytes.length);
-    bytes.set(namespaceBytes);
-    bytes.set(valueBytes, namespaceBytes.length);
-    bytes = hash(bytes);
-    bytes[6] = (bytes[6] & 0x0f) | version;
-    bytes[8] = (bytes[8] & 0x3f) | 0x80;
-    if (buf) {
-        offset = offset || 0;
-        for (let i = 0; i < 16; ++i) {
-            buf[offset + i] = bytes[i];
-        }
-        return buf;
-    }
-    return (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__.unsafeStringify)(bytes);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v4.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v4.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _native_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./native.js */ "./node_modules/uuid/dist-node/native.js");
-/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist-node/rng.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-
-
-
-function _v4(options, buf, offset) {
-    options = options || {};
-    const rnds = options.random ?? options.rng?.() ?? (0,_rng_js__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    if (rnds.length < 16) {
-        throw new Error('Random bytes length must be >= 16');
-    }
-    rnds[6] = (rnds[6] & 0x0f) | 0x40;
-    rnds[8] = (rnds[8] & 0x3f) | 0x80;
-    if (buf) {
-        offset = offset || 0;
-        if (offset < 0 || offset + 16 > buf.length) {
-            throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);
-        }
-        for (let i = 0; i < 16; ++i) {
-            buf[offset + i] = rnds[i];
-        }
-        return buf;
-    }
-    return (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__.unsafeStringify)(rnds);
-}
-function v4(options, buf, offset) {
-    if (_native_js__WEBPACK_IMPORTED_MODULE_2__["default"].randomUUID && !buf && !options) {
-        return _native_js__WEBPACK_IMPORTED_MODULE_2__["default"].randomUUID();
-    }
-    return _v4(options, buf, offset);
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v4);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v5.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v5.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   DNS: () => (/* reexport safe */ _v35_js__WEBPACK_IMPORTED_MODULE_0__.DNS),
-/* harmony export */   URL: () => (/* reexport safe */ _v35_js__WEBPACK_IMPORTED_MODULE_0__.URL),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _sha1_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sha1.js */ "./node_modules/uuid/dist-node/sha1.js");
-/* harmony import */ var _v35_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v35.js */ "./node_modules/uuid/dist-node/v35.js");
-
-
-
-function v5(value, namespace, buf, offset) {
-    return (0,_v35_js__WEBPACK_IMPORTED_MODULE_0__["default"])(0x50, _sha1_js__WEBPACK_IMPORTED_MODULE_1__["default"], value, namespace, buf, offset);
-}
-v5.DNS = _v35_js__WEBPACK_IMPORTED_MODULE_0__.DNS;
-v5.URL = _v35_js__WEBPACK_IMPORTED_MODULE_0__.URL;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v5);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v6.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v6.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-/* harmony import */ var _v1_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./v1.js */ "./node_modules/uuid/dist-node/v1.js");
-/* harmony import */ var _v1ToV6_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./v1ToV6.js */ "./node_modules/uuid/dist-node/v1ToV6.js");
-
-
-
-function v6(options, buf, offset) {
-    options ??= {};
-    offset ??= 0;
-    let bytes = (0,_v1_js__WEBPACK_IMPORTED_MODULE_0__["default"])({ ...options, _v6: true }, new Uint8Array(16));
-    bytes = (0,_v1ToV6_js__WEBPACK_IMPORTED_MODULE_1__["default"])(bytes);
-    if (buf) {
-        for (let i = 0; i < 16; i++) {
-            buf[offset + i] = bytes[i];
-        }
-        return buf;
-    }
-    return (0,_stringify_js__WEBPACK_IMPORTED_MODULE_2__.unsafeStringify)(bytes);
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v6);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v6ToV1.js":
-/*!***********************************************!*\
-  !*** ./node_modules/uuid/dist-node/v6ToV1.js ***!
-  \***********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ v6ToV1)
-/* harmony export */ });
-/* harmony import */ var _parse_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parse.js */ "./node_modules/uuid/dist-node/parse.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-
-
-function v6ToV1(uuid) {
-    const v6Bytes = typeof uuid === 'string' ? (0,_parse_js__WEBPACK_IMPORTED_MODULE_0__["default"])(uuid) : uuid;
-    const v1Bytes = _v6ToV1(v6Bytes);
-    return typeof uuid === 'string' ? (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__.unsafeStringify)(v1Bytes) : v1Bytes;
-}
-function _v6ToV1(v6Bytes) {
-    return Uint8Array.of(((v6Bytes[3] & 0x0f) << 4) | ((v6Bytes[4] >> 4) & 0x0f), ((v6Bytes[4] & 0x0f) << 4) | ((v6Bytes[5] & 0xf0) >> 4), ((v6Bytes[5] & 0x0f) << 4) | (v6Bytes[6] & 0x0f), v6Bytes[7], ((v6Bytes[1] & 0x0f) << 4) | ((v6Bytes[2] & 0xf0) >> 4), ((v6Bytes[2] & 0x0f) << 4) | ((v6Bytes[3] & 0xf0) >> 4), 0x10 | ((v6Bytes[0] & 0xf0) >> 4), ((v6Bytes[0] & 0x0f) << 4) | ((v6Bytes[1] & 0xf0) >> 4), v6Bytes[8], v6Bytes[9], v6Bytes[10], v6Bytes[11], v6Bytes[12], v6Bytes[13], v6Bytes[14], v6Bytes[15]);
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/v7.js":
-/*!*******************************************!*\
-  !*** ./node_modules/uuid/dist-node/v7.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   updateV7State: () => (/* binding */ updateV7State)
-/* harmony export */ });
-/* harmony import */ var _rng_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./rng.js */ "./node_modules/uuid/dist-node/rng.js");
-/* harmony import */ var _stringify_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stringify.js */ "./node_modules/uuid/dist-node/stringify.js");
-
-
-const _state = {};
-function v7(options, buf, offset) {
-    let bytes;
-    if (options) {
-        bytes = v7Bytes(options.random ?? options.rng?.() ?? (0,_rng_js__WEBPACK_IMPORTED_MODULE_0__["default"])(), options.msecs, options.seq, buf, offset);
-    }
-    else {
-        const now = Date.now();
-        const rnds = (0,_rng_js__WEBPACK_IMPORTED_MODULE_0__["default"])();
-        updateV7State(_state, now, rnds);
-        bytes = v7Bytes(rnds, _state.msecs, _state.seq, buf, offset);
-    }
-    return buf ?? (0,_stringify_js__WEBPACK_IMPORTED_MODULE_1__.unsafeStringify)(bytes);
-}
-function updateV7State(state, now, rnds) {
-    state.msecs ??= -Infinity;
-    state.seq ??= 0;
-    if (now > state.msecs) {
-        state.seq = (rnds[6] << 23) | (rnds[7] << 16) | (rnds[8] << 8) | rnds[9];
-        state.msecs = now;
-    }
-    else {
-        state.seq = (state.seq + 1) | 0;
-        if (state.seq === 0) {
-            state.msecs++;
-        }
-    }
-    return state;
-}
-function v7Bytes(rnds, msecs, seq, buf, offset = 0) {
-    if (rnds.length < 16) {
-        throw new Error('Random bytes length must be >= 16');
-    }
-    if (!buf) {
-        buf = new Uint8Array(16);
-        offset = 0;
-    }
-    else {
-        if (offset < 0 || offset + 16 > buf.length) {
-            throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);
-        }
-    }
-    msecs ??= Date.now();
-    seq ??= ((rnds[6] * 0x7f) << 24) | (rnds[7] << 16) | (rnds[8] << 8) | rnds[9];
-    buf[offset++] = (msecs / 0x10000000000) & 0xff;
-    buf[offset++] = (msecs / 0x100000000) & 0xff;
-    buf[offset++] = (msecs / 0x1000000) & 0xff;
-    buf[offset++] = (msecs / 0x10000) & 0xff;
-    buf[offset++] = (msecs / 0x100) & 0xff;
-    buf[offset++] = msecs & 0xff;
-    buf[offset++] = 0x70 | ((seq >>> 28) & 0x0f);
-    buf[offset++] = (seq >>> 20) & 0xff;
-    buf[offset++] = 0x80 | ((seq >>> 14) & 0x3f);
-    buf[offset++] = (seq >>> 6) & 0xff;
-    buf[offset++] = ((seq << 2) & 0xff) | (rnds[10] & 0x03);
-    buf[offset++] = rnds[11];
-    buf[offset++] = rnds[12];
-    buf[offset++] = rnds[13];
-    buf[offset++] = rnds[14];
-    buf[offset++] = rnds[15];
-    return buf;
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (v7);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/validate.js":
-/*!*************************************************!*\
-  !*** ./node_modules/uuid/dist-node/validate.js ***!
-  \*************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _regex_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.js */ "./node_modules/uuid/dist-node/regex.js");
-
-function validate(uuid) {
-    return typeof uuid === 'string' && _regex_js__WEBPACK_IMPORTED_MODULE_0__["default"].test(uuid);
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (validate);
-
-
-/***/ }),
-
-/***/ "./node_modules/uuid/dist-node/version.js":
-/*!************************************************!*\
-  !*** ./node_modules/uuid/dist-node/version.js ***!
-  \************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _validate_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./validate.js */ "./node_modules/uuid/dist-node/validate.js");
-
-function version(uuid) {
-    if (!(0,_validate_js__WEBPACK_IMPORTED_MODULE_0__["default"])(uuid)) {
-        throw TypeError('Invalid UUID');
-    }
-    return parseInt(uuid.slice(14, 15), 16);
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (version);
-
 
 /***/ })
 
@@ -5027,35 +4528,6 @@ function version(uuid) {
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
 /******/ 	
 /************************************************************************/
 /******/ 	

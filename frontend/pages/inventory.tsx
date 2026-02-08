@@ -231,13 +231,16 @@ export default function Inventory() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="glass px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary transition cursor-pointer"
+              className="bg-black/50 backdrop-blur-xl border border-white/10 text-white px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:1.5rem] bg-[right_0.5rem_center] bg-no-repeat pr-10"
+              style={{
+                colorScheme: 'dark'
+              }}
             >
-              <option value="recent">Недавние</option>
-              <option value="price-high">Цена: по убыванию</option>
-              <option value="price-low">Цена: по возрастанию</option>
-              <option value="name">По названию</option>
-              <option value="rarity">По редкости</option>
+              <option value="recent" className="bg-[#1a1a1f] text-white">Недавние</option>
+              <option value="price-high" className="bg-[#1a1a1f] text-white">Цена: по убыванию</option>
+              <option value="price-low" className="bg-[#1a1a1f] text-white">Цена: по возрастанию</option>
+              <option value="name" className="bg-[#1a1a1f] text-white">По названию</option>
+              <option value="rarity" className="bg-[#1a1a1f] text-white">По редкости</option>
             </select>
           </div>
 

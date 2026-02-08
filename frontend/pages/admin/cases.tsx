@@ -578,11 +578,12 @@ function ManageItemsModal({ caseData, onClose, allItems, onAddItem, onRemoveItem
               <select
                 value={selectedItemId}
                 onChange={(e) => setSelectedItemId(e.target.value)}
-                className="flex-1 px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+                className="flex-1 px-4 py-3 bg-black/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:1.5rem] bg-[right_0.5rem_center] bg-no-repeat pr-10"
+                style={{ colorScheme: 'dark' }}
               >
-                <option value="">Выберите предмет</option>
+                <option value="" className="bg-[#1a1a1f] text-white">Выберите предмет</option>
                 {availableItems.map((item: Item) => (
-                  <option key={item.id} value={item.id}>
+                  <option key={item.id} value={item.id} className="bg-[#1a1a1f] text-white">
                     {item.name} ({item.rarity}) - {item.basePrice}₽
                   </option>
                 ))}

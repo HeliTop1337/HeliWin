@@ -471,12 +471,13 @@ export default function AdminPromo() {
                             <select
                               value={formData.caseId}
                               onChange={(e) => setFormData({ ...formData, caseId: e.target.value })}
-                              className="w-full bg-black/40 border-2 border-white/10 rounded-xl px-6 py-4 text-lg focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/20 transition-all"
+                              className="w-full bg-black/40 border-2 border-white/10 rounded-xl px-6 py-4 text-lg text-white focus:outline-none focus:border-cyan-500 focus:ring-4 focus:ring-cyan-500/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:1.5rem] bg-[right_0.5rem_center] bg-no-repeat pr-10"
+                              style={{ colorScheme: 'dark' }}
                               required
                             >
-                              <option value="">Выберите кейс</option>
+                              <option value="" className="bg-[#1a1a1f] text-white">Выберите кейс</option>
                               {cases.map((c: any) => (
-                                <option key={c.id} value={c.id}>{c.name} — {c.price} ₽</option>
+                                <option key={c.id} value={c.id} className="bg-[#1a1a1f] text-white">{c.name} — {c.price} ₽</option>
                               ))}
                             </select>
                           </motion.div>
@@ -497,12 +498,13 @@ export default function AdminPromo() {
                             <select
                               value={formData.itemId}
                               onChange={(e) => setFormData({ ...formData, itemId: e.target.value })}
-                              className="w-full bg-black/40 border-2 border-white/10 rounded-xl px-6 py-4 text-lg focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/20 transition-all"
+                              className="w-full bg-black/40 border-2 border-white/10 rounded-xl px-6 py-4 text-lg text-white focus:outline-none focus:border-pink-500 focus:ring-4 focus:ring-pink-500/20 transition-all appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3e%3cpolyline points=%276 9 12 15 18 9%27%3e%3c/polyline%3e%3c/svg%3e')] bg-[length:1.5rem] bg-[right_0.5rem_center] bg-no-repeat pr-10"
+                              style={{ colorScheme: 'dark' }}
                               required
                             >
-                              <option value="">Выберите предмет</option>
+                              <option value="" className="bg-[#1a1a1f] text-white">Выберите предмет</option>
                               {items.map((item: any) => (
-                                <option key={item.id} value={item.id}>
+                                <option key={item.id} value={item.id} className="bg-[#1a1a1f] text-white">
                                   {item.name} — {item.basePrice} ₽
                                 </option>
                               ))}
