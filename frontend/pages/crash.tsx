@@ -81,6 +81,29 @@ export default function CrashPage() {
         startTimeRef.current = data.startTime;
       }
       
+      // Если получили состояние COUNTDOWN с временем старта, рассчитываем оставшееся время
+      if (data.state === RoundState.COUNTDOWN && data.countdownStartTime && data.countdownDuration) {
+        const elapsed = data.serverTime - data.countdownStartTime;
+        const remaining = (data.countdownDuration - elapsed) / 1000;
+        
+        if (remaining > 0) {
+          setCountdown(remaining);
+          
+          // Запускаем локальный таймер
+          const interval = setInterval(() => {
+            setCountdown(prev => {
+              if (prev === null || prev <= 0.1) {
+                clearInterval(interval);
+                return null;
+              }
+              return prev - 0.1;
+            });
+          }, 100);
+        } else {
+          setCountdown(0);
+        }
+      }
+      
       if (user && data.bets) {
         const userBet = data.bets.find((b: Bet) => b.username === user.username);
         setHasBet(!!userBet);
@@ -430,7 +453,18 @@ export default function CrashPage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handlePlaceBet}
-                    className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 rounded-xl py-4 font-black text-lg shadow-lg shadow-teal-500/50 transition-all"
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 rounded-xl py-4 font-black text-lg shadow-lg shadow-green-500/50 transition-all"
+                  >
+                    Сделать ставку
+                  </motion.button>
+                ) : !hasBet && roundState === RoundState.RUNNING ? (
+                  <motion.button
+                    key="game-running"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="w-full glass rounded-xl py-4 text-center font-bold text-muted-foreground cursor-not-allowed"
+                    disabled
                   >
                     Игра идёт...
                   </motion.button>
@@ -513,7 +547,7 @@ export default function CrashPage() {
                   <div className="absolute top-6 left-6 z-30 space-y-4">
                     <AnimatePresence mode="wait">
                       {/* Таймер или статус раунда */}
-                      {roundState === RoundState.COUNTDOWN && countdown !== null ? (
+                      {roundState === RoundState.COUNTDOWN ? (
                         <motion.div
                           key="countdown-info"
                           initial={{ opacity: 0, x: -20 }}
@@ -523,7 +557,7 @@ export default function CrashPage() {
                         >
                           <div className="text-sm text-gray-400 uppercase tracking-wider mb-1">ДО НАЧАЛА</div>
                           <div className="text-5xl font-black text-white">
-                            00:{countdown.toFixed(0).padStart(2, '0')}
+                            00:{countdown !== null ? countdown.toFixed(0).padStart(2, '0') : '00'}
                           </div>
                         </motion.div>
                       ) : roundState === RoundState.RUNNING ? (
@@ -550,6 +584,19 @@ export default function CrashPage() {
                           <div className="text-sm text-red-400 uppercase tracking-wider mb-1">РАУНД ЗАВЕРШЁН</div>
                           <div className="text-5xl font-black text-red-500">
                             x{crashMultiplier.toFixed(2)}
+                          </div>
+                        </motion.div>
+                      ) : roundState === RoundState.RESET ? (
+                        <motion.div
+                          key="reset-info"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          className="glass rounded-xl p-4 backdrop-blur-md"
+                        >
+                          <div className="text-sm text-gray-400 uppercase tracking-wider mb-1">ПОДГОТОВКА</div>
+                          <div className="text-5xl font-black text-white">
+                            ...
                           </div>
                         </motion.div>
                       ) : null}

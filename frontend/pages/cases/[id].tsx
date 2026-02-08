@@ -18,9 +18,51 @@ export default function CaseDetail() {
   const [results, setResults] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
   const [rouletteItems, setRouletteItems] = useState<any[]>([]);
-  const [winningIndex, setWinningIndex] = useState<number>(49);
+  const [winningIndex, setWinningIndex] = useState<number>(50);
   const [openCount, setOpenCount] = useState<number>(1);
+  const [rouletteOffset, setRouletteOffset] = useState<number>(0);
   const { toasts, removeToast, error: showError, success: showSuccess } = useToast();
+  const rouletteRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Рассчитываем смещение рулетки при изменении размеров или загрузке предметов
+  useEffect(() => {
+    if (rouletteItems.length > 0 && containerRef.current) {
+      // Небольшая задержка чтобы DOM успел обновиться
+      setTimeout(() => {
+        if (containerRef.current) {
+          // Ширина одного элемента: 160px (w-40) + 16px (gap-4)
+          const itemWidth = 176;
+          // Получаем реальную ширину контейнера
+          const containerWidth = containerRef.current.offsetWidth;
+          // Центр контейнера
+          const centerOffset = containerWidth / 2;
+          // Позиция выигрышного элемента (его центр должен быть в центре экрана)
+          const winningPosition = winningIndex * itemWidth + (itemWidth / 2);
+          // Смещение для центрирования
+          const offset = -(winningPosition - centerOffset);
+          setRouletteOffset(offset);
+        }
+      }, 50);
+    }
+  }, [rouletteItems, winningIndex]);
+
+  // Пересчитываем при изменении размера окна
+  useEffect(() => {
+    const handleResize = () => {
+      if (rouletteItems.length > 0 && containerRef.current) {
+        const itemWidth = 176;
+        const containerWidth = containerRef.current.offsetWidth;
+        const centerOffset = containerWidth / 2;
+        const winningPosition = winningIndex * itemWidth + (itemWidth / 2);
+        const offset = -(winningPosition - centerOffset);
+        setRouletteOffset(offset);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [rouletteItems, winningIndex]);
 
   useEffect(() => {
     if (id) {
@@ -88,8 +130,8 @@ export default function CaseDetail() {
         // Создаем массив для рулетки с РЕАЛЬНЫМ выигранным предметом
         const rouletteArray = [];
         
-        // Добавляем 49 случайных предметов в начало
-        for (let i = 0; i < 49; i++) {
+        // Добавляем 50 случайных предметов в начало
+        for (let i = 0; i < 50; i++) {
           const randomItem = items[Math.floor(Math.random() * items.length)];
           rouletteArray.push(randomItem);
         }
@@ -100,7 +142,7 @@ export default function CaseDetail() {
           dropChance: 0
         };
         rouletteArray.push(wonItemForRoulette);
-        setWinningIndex(49);
+        setWinningIndex(50);
         
         // Добавляем еще 10 предметов после выигранного
         for (let i = 0; i < 10; i++) {
@@ -292,6 +334,7 @@ export default function CaseDetail() {
         {/* Roulette Animation - только для x1 */}
         {opening && openCount === 1 && rouletteItems.length > 0 && (
           <motion.div
+            ref={containerRef}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="glass rounded-3xl p-8 mb-8 overflow-hidden"
@@ -303,11 +346,10 @@ export default function CaseDetail() {
               
               {/* Scrolling items */}
               <motion.div
+                ref={rouletteRef}
                 className="flex gap-4 absolute left-0"
                 initial={{ x: 0 }}
-                animate={{
-                  x: -(winningIndex * 176 - (typeof window !== 'undefined' ? window.innerWidth / 2 : 960) + 80)
-                }}
+                animate={{ x: rouletteOffset }}
                 transition={{
                   duration: 7,
                   ease: [0.33, 1, 0.68, 1]
