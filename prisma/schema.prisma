@@ -1,0 +1,263 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  username      String   @unique
+  password      String
+  balance       Float    @default(0)
+  role          String   @default("USER")
+  avatar        String?
+  isBanned      Boolean  @default(false)
+  banReason     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions      Session[]
+  inventory     InventoryItem[]
+  drops         ItemDrop[]
+  transactions  Transaction[]
+  upgradeLogs   UpgradeLog[]
+  battlePlayers BattlePlayer[]
+  usedPromoCodes PromoCodeUsage[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([refreshToken])
+}
+
+model Item {
+  id          String   @id @default(uuid())
+  externalId  String?  @unique
+  name        String
+  category    String
+  icon        String
+  rarity      String
+  basePrice   Float
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  caseItems     CaseItem[]
+  inventoryItems InventoryItem[]
+  drops         ItemDrop[]
+  upgradeLogs   UpgradeLog[]
+  promoCodeItems PromoCodeItem[]
+
+  @@index([rarity])
+  @@index([category])
+}
+
+model Case {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  price       Float
+  icon        String?
+  discount    Float    @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items   CaseItem[]
+  drops   ItemDrop[]
+  battles Battle[]
+
+  @@index([isActive])
+}
+
+model CaseItem {
+  id        String   @id @default(uuid())
+  caseId    String
+  itemId    String
+  dropChance Float
+  createdAt DateTime @default(now())
+
+  case Case @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([caseId, itemId])
+  @@index([caseId])
+  @@index([itemId])
+}
+
+model InventoryItem {
+  id        String   @id @default(uuid())
+  userId    String
+  itemId    String
+  isSold    Boolean  @default(false)
+  soldAt    DateTime?
+  soldPrice Float?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([itemId])
+  @@index([isSold])
+}
+
+model ItemDrop {
+  id        String   @id @default(uuid())
+  userId    String
+  caseId    String
+  itemId    String
+  battleId  String?
+  createdAt DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case   Case    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  item   Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  battle Battle? @relation(fields: [battleId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([caseId])
+  @@index([itemId])
+  @@index([battleId])
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  amount      Float
+  balanceBefore Float
+  balanceAfter  Float
+  description String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model PromoCode {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  type        String
+  value       Float?
+  caseId      String?
+  maxUses     Int?
+  usedCount   Int      @default(0)
+  expiresAt   DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  items PromoCodeItem[]
+  usages PromoCodeUsage[]
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model PromoCodeItem {
+  id          String @id @default(uuid())
+  promoCodeId String
+  itemId      String
+
+  promoCode PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  item      Item      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([promoCodeId, itemId])
+}
+
+model PromoCodeUsage {
+  id          String   @id @default(uuid())
+  promoCodeId String
+  userId      String
+  usedAt      DateTime @default(now())
+
+  promoCode PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([promoCodeId, userId])
+  @@index([userId])
+}
+
+model UpgradeLog {
+  id          String   @id @default(uuid())
+  userId      String
+  itemId      String
+  success     Boolean
+  chance      Float
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([itemId])
+}
+
+model Battle {
+  id          String   @id @default(uuid())
+  caseId      String
+  maxPlayers  Int
+  status      String   @default("waiting")
+  winnerId    String?
+  totalValue  Float    @default(0)
+  createdAt   DateTime @default(now())
+  startedAt   DateTime?
+  finishedAt  DateTime?
+
+  case    Case           @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  players BattlePlayer[]
+  drops   ItemDrop[]
+
+  @@index([status])
+  @@index([caseId])
+}
+
+model BattlePlayer {
+  id        String   @id @default(uuid())
+  battleId  String
+  userId    String
+  position  Int
+  totalValue Float   @default(0)
+  isWinner  Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+
+  battle Battle @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([battleId, userId])
+  @@index([battleId])
+  @@index([userId])
+}
+
+model AdminLog {
+  id          String   @id @default(uuid())
+  adminId     String
+  action      String
+  targetType  String?
+  targetId    String?
+  details     String?
+  createdAt   DateTime @default(now())
+
+  @@index([adminId])
+  @@index([action])
+  @@index([createdAt])
+}

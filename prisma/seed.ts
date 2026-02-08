@@ -1,0 +1,423 @@
+import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
+
+const prisma = new PrismaClient();
+
+const stalcraftItems = [
+  { externalId: '0r2g1', name: '9А-91', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/0r2g1.png' },
+  { externalId: '0r2zd', name: '«Уравнитель»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/0r2zd.png' },
+  { externalId: '0r3nd', name: 'Поношенная HK G3A1', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/0r3nd.png' },
+  { externalId: '0rq99', name: '«Руна» (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/0rq99.png' },
+  { externalId: '1', name: 'FAL (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/1.png' },
+  { externalId: '1r731', name: 'Kbk wz. 88 Tantal', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/1r731.png' },
+  { externalId: '1r7g1', name: 'Steyr AUG A3', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/1r7g1.png' },
+  { externalId: '1rd56', name: 'АКС-74', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/1rd56.png' },
+  { externalId: '1rdk6', name: 'АК-9М «Койот»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/1rdk6.png' },
+  { externalId: '2odq0', name: 'АК-203', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/2odq0.png' },
+  { externalId: '2ody0', name: 'ОЦ-14-А1 «Тор»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/2ody0.png' },
+  { externalId: '2ony6', name: 'IWI Tavor X95', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/2ony6.png' },
+  { externalId: '3gn5g', name: 'ТКБ-0146М', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/3gn5g.png' },
+  { externalId: '3gr6z', name: 'LWRC M6', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/3gr6z.png' },
+  { externalId: '3grwz', name: 'PSA PA 10 «Такт»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/3grwz.png' },
+  { externalId: '4q09p', name: 'HK G3A1', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/4q09p.png' },
+  { externalId: '4q0gl', name: 'MK47 Mutant', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/4q0gl.png' },
+  { externalId: '4qnwn', name: 'ОЦ-14М «Ураган»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/4qnwn.png' },
+  { externalId: '5ld1g', name: 'ОЦ-14 «Гроза»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/5ld1g.png' },
+  { externalId: '5ldkg', name: 'АКМ', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/5ldkg.png' },
+  { externalId: '5ldwg', name: 'АКС-74У', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/5ldwg.png' },
+  { externalId: '5ldz4', name: 'А-762 «Арес»', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/5ldz4.png' },
+  { externalId: '5lgo1', name: 'XM8 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/5lgo1.png' },
+  { externalId: '5lnw0', name: 'FN FAL', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/5lnw0.png' },
+  { externalId: '6wr0j', name: 'АЕК-973 «Марс»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/6wr0j.png' },
+  { externalId: '6wr5j', name: 'АК-15', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/6wr5j.png' },
+  { externalId: '7lnj7', name: 'SA-58 CTC', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/7lnj7.png' },
+  { externalId: '7lrj3', name: 'АКС-9 «Горностай»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/7lrj3.png' },
+  { externalId: '7lrm3', name: 'Старый FN FAL', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/7lrm3.png' },
+  { externalId: '7lry3', name: 'АМБ-17', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/7lry3.png' },
+  { externalId: '7lrz3', name: 'АК-103', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/7lrz3.png' },
+  { externalId: '969jz', name: 'Steyr AUG A2', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/969jz.png' },
+  { externalId: '96m4w', name: 'QBZ-191 «Буревестник»', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/96m4w.png' },
+  { externalId: '96mn0', name: 'PSA PA 10 «Ритм»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/96mn0.png' },
+  { externalId: '96my0', name: 'АЛК-22 «Стрекоза»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/96my0.png' },
+  { externalId: 'dmjdn', name: 'АК-308', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/dmjdn.png' },
+  { externalId: 'dmjwn', name: 'HK416', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/dmjwn.png' },
+  { externalId: 'dmqg5', name: 'АКМ «Тишина»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/dmqg5.png' },
+  { externalId: 'dmqk5', name: 'АМ-17', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/dmqk5.png' },
+  { externalId: 'dmv6j', name: 'HK416 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/dmv6j.png' },
+  { externalId: 'g4060', name: 'L85A1', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/g4060.png' },
+  { externalId: 'g4mdp', name: 'АК-12', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/g4mdp.png' },
+  { externalId: 'j5l37', name: 'АЕК-971', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/j5l37.png' },
+  { externalId: 'j5l77', name: 'Поношенная L85A1', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/j5l77.png' },
+  { externalId: 'j5lk7', name: 'M16A3', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/j5lk7.png' },
+  { externalId: 'j5lm4', name: 'Beretta ARX-160', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/j5lm4.png' },
+  { externalId: 'j5od6', name: 'FAMAS G2', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/j5od6.png' },
+  { externalId: 'j5vz0', name: 'АК-308 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/j5vz0.png' },
+  { externalId: 'knl30', name: 'FN F2000 Tactical', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/knl30.png' },
+  { externalId: 'knl70', name: 'АКС чистильщика', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/knl70.png' },
+  { externalId: 'knlo3', name: 'SIG 516', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/knlo3.png' },
+  { externalId: 'knv5y', name: 'HK417 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/knv5y.png' },
+  { externalId: 'lyl3j', name: 'АШ-12', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/lyl3j.png' },
+  { externalId: 'lyl7j', name: 'M16A1', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/lyl7j.png' },
+  { externalId: 'lyljj', name: 'M4 LB', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/lyljj.png' },
+  { externalId: 'lyv9k', name: 'X95 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/lyv9k.png' },
+  { externalId: 'm023j', name: 'Поношенный SIG SG 550', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/m023j.png' },
+  { externalId: 'n42g1', name: 'AUG A3 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/n42g1.png' },
+  { externalId: 'n4md3', name: 'HK XM8S', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/n4md3.png' },
+  { externalId: 'okv0o', name: 'M16A2', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/okv0o.png' },
+  { externalId: 'okv7o', name: 'АН-94 «Абакан»', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/okv7o.png' },
+  { externalId: 'p63d2', name: 'HK417', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/p63d2.png' },
+  { externalId: 'p63g2', name: 'Steyr AUG A1', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/p63g2.png' },
+  { externalId: 'p6r26', name: 'FN F2000', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/p6r26.png' },
+  { externalId: 'qjg3j', name: 'DSA-58 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/qjg3j.png' },
+  { externalId: 'qjv99', name: 'KS-1', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/qjv99.png' },
+  { externalId: 'rw27g', name: '«Рапира»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/rw27g.png' },
+  { externalId: 'rwrng', name: 'АН-94М «Абакан»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/rwrng.png' },
+  { externalId: 'vj2zd', name: 'DSA-58', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/vj2zd.png' },
+  { externalId: 'vj40r', name: 'АК-12 (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/vj40r.png' },
+  { externalId: 'vjr1n', name: 'АК-74М', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/vjr1n.png' },
+  { externalId: 'wj6l2', name: 'SCAR-H (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/wj6l2.png' },
+  { externalId: 'wj75o', name: 'FN SCAR-H', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/wj75o.png' },
+  { externalId: 'wjo4p', name: 'А-545', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/wjo4p.png' },
+  { externalId: 'wjogp', name: 'SIG SG 550', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/wjogp.png' },
+  { externalId: 'wjowd', name: 'АСМ «Сервал»', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/wjowd.png' },
+  { externalId: 'y32lo', name: 'FN SCAR-L', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/y32lo.png' },
+  { externalId: 'y32wo', name: 'HK XM8', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/y32wo.png' },
+  { externalId: 'y375z', name: 'АС «Вал»', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/y375z.png' },
+  { externalId: 'y37kw', name: 'PSA 20 STR «Пульс»', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/y37kw.png' },
+  { externalId: 'y3jnk', name: 'XM8S (А)', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/y3jnk.png' },
+  { externalId: 'zz2rn', name: 'АК-105', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/zz2rn.png' },
+  { externalId: 'zz7j2', name: 'HK G36C', category: 'Автомат', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/zz7j2.png' },
+  { externalId: 'zz7q9', name: 'ОЦ-14М «Разряд»', category: 'Автомат', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/zz7q9.png' },
+  { externalId: 'zz7y2', name: 'M4A1', category: 'Автомат', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/assault_rifle/zz7y2.png' },
+  { externalId: '0r211', name: 'Crye Precision SIX12', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/0r211.png' },
+  { externalId: '1', name: 'Franchi SPAS-12', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/1.png' },
+  { externalId: '1r742', name: 'БМ-16', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/1r742.png' },
+  { externalId: '2on45', name: 'КС-23', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/2on45.png' },
+  { externalId: '3gnk5', name: 'Franchi SPAS-15', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/3gnk5.png' },
+  { externalId: '4qn2o', name: 'Protecta', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/4qn2o.png' },
+  { externalId: '5ln0q', name: 'Shorty 590', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/5ln0q.png' },
+  { externalId: '5ln3q', name: 'Winchester 1887', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/5ln3q.png' },
+  { externalId: '5ln7q', name: 'Сайга-12К', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/5ln7q.png' },
+  { externalId: '6w64y', name: 'Grizzly 8.5', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/6w64y.png' },
+  { externalId: '7ln2j', name: 'АЕК-965', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/7ln2j.png' },
+  { externalId: '969ky', name: 'Обрез БМ-16', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/969ky.png' },
+  { externalId: 'dmjz2', name: 'Pancor Jackhammer', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/dmjz2.png' },
+  { externalId: 'g4mz5', name: 'ТОЗ-34', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/g4mz5.png' },
+  { externalId: 'j5o9g', name: 'ОЦ-62', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/j5o9g.png' },
+  { externalId: 'ly2m1', name: 'M1014', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/ly2m1.png' },
+  { externalId: 'm0mz2', name: 'M1014 Breacher', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/m0mz2.png' },
+  { externalId: 'p615w', name: 'Derya MK-12 (А)', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/p615w.png' },
+  { externalId: 'p63w4', name: 'Derya MK-12 AS-103S', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/p63w4.png' },
+  { externalId: 'qj253', name: 'Chiappa Triple Crown', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/qj253.png' },
+  { externalId: 'qj2zk', name: 'AA-12', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/qj2zk.png' },
+  { externalId: 'rw2ky', name: 'МЦ-255', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/rw2ky.png' },
+  { externalId: 'vj2mp', name: 'KS-12 Komrad', category: 'Дробовик', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/vj2mp.png' },
+  { externalId: 'wj7v3', name: 'РМО-93', category: 'Дробовик', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/wj7v3.png' },
+  { externalId: 'y32o3', name: 'МР-153', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/y32o3.png' },
+  { externalId: 'y32v3', name: 'МР-133', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/y32v3.png' },
+  { externalId: 'y32y3', name: 'Обрез ТОЗ-34', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/y32y3.png' },
+  { externalId: 'zz29n', name: 'Cobray Terminator', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/zz29n.png' },
+  { externalId: 'zz2nm', name: 'Mossberg 590A1', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/zz2nm.png' },
+  { externalId: 'zz2om', name: 'Mossberg 500', category: 'Дробовик', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/shotgun_rifle/zz2om.png' },
+  { externalId: '1', name: 'McMillan CS5', category: 'Снайперская винтовка', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/1.png' },
+  { externalId: '12', name: 'ОТЛ-03 «Карбач»', category: 'Снайперская винтовка', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/12.png' },
+  { externalId: '1r79g', name: 'СКТ-40', category: 'Снайперская винтовка', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/1r79g.png' },
+  { externalId: '1r7rg', name: 'Карабин Мосина', category: 'Снайперская винтовка', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/1r7rg.png' },
+  { externalId: '2olgl', name: 'Cheytac M300 (А)', category: 'Снайперская винтовка', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/2olgl.png' },
+  { externalId: '2ongl', name: 'Cheytac M300', category: 'Снайперская винтовка', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/2ongl.png' },
+  { externalId: '3gnzl', name: 'QBU-191', category: 'Снайперская винтовка', rarity: 'EXCEPTIONAL', basePrice: 455, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/3gnzl.png' },
+  { externalId: '4qn7r', name: 'CR-380', category: 'Снайперская винтовка', rarity: 'LEGENDARY', basePrice: 1170, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/4qn7r.png' },
+  { externalId: '4qnkr', name: 'Steyr Scout', category: 'Снайперская винтовка', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/4qnkr.png' },
+  { externalId: '5lno1', name: 'СВУ', category: 'Снайперская винтовка', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/5lno1.png' },
+  { externalId: '5lnp0', name: 'СОК-94', category: 'Снайперская винтовка', rarity: 'COMMON', basePrice: 39, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/5lnp0.png' },
+  { externalId: '5lny1', name: 'M40A5', category: 'Снайперская винтовка', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/5lny1.png' },
+  { externalId: '7lnk7', name: 'МЦ-116М', category: 'Снайперская винтовка', rarity: 'RARE', basePrice: 234, icon: 'https://raw.githubusercontent.com/EXBO-Studio/stalcraft-database/main/global/icons/weapon/sniper_rifle/7lnk7.png' },
+];
+
+async function main() {
+  console.log('Заполнение базы данных...');
+
+  const adminPassword = await bcrypt.hash('admin123', 12);
+  const admin = await prisma.user.upsert({
+    where: { email: 'admin@heliwin.com' },
+    update: {},
+    create: {
+      email: 'admin@heliwin.com',
+      username: 'admin',
+      password: adminPassword,
+      role: 'SUPER_ADMIN',
+      balance: 10000,
+    },
+  });
+
+  console.log('Создан администратор:', admin.username);
+
+  const items = [];
+  for (const itemData of stalcraftItems) {
+    const item = await prisma.item.upsert({
+      where: { externalId: itemData.externalId },
+      update: {
+        name: itemData.name,
+        category: itemData.category,
+        icon: itemData.icon,
+        rarity: itemData.rarity,
+        basePrice: itemData.basePrice,
+      },
+      create: {
+        externalId: itemData.externalId,
+        name: itemData.name,
+        category: itemData.category,
+        icon: itemData.icon,
+        rarity: itemData.rarity,
+        basePrice: itemData.basePrice,
+      },
+    });
+    items.push(item);
+  }
+
+  console.log(`Создано ${items.length} предметов из Stalcraft`);
+
+  const starterCase = await prisma.case.upsert({
+    where: { name: 'Стартовый кейс' },
+    update: {},
+    create: {
+      name: 'Стартовый кейс',
+      description: 'Базовый кейс с обычными предметами для новичков',
+      price: 50,
+      icon: 'https://eapi.stalcraft.net/RU/ru/item/case-starter/icon',
+    },
+  });
+
+  const premiumCase = await prisma.case.upsert({
+    where: { name: 'Премиум кейс' },
+    update: {},
+    create: {
+      name: 'Премиум кейс',
+      description: 'Кейс высокого уровня с редкими предметами',
+      price: 200,
+      icon: 'https://eapi.stalcraft.net/RU/ru/item/case-premium/icon',
+    },
+  });
+
+  const legendaryCase = await prisma.case.upsert({
+    where: { name: 'Легендарный кейс' },
+    update: {},
+    create: {
+      name: 'Легендарный кейс',
+      description: 'Эксклюзивный кейс с легендарными предметами',
+      price: 500,
+      icon: 'https://eapi.stalcraft.net/RU/ru/item/case-legendary/icon',
+      discount: 10,
+    },
+  });
+
+  const commonItems = items.filter((i) => i.rarity === 'COMMON');
+  const uncommonItems = items.filter((i) => i.rarity === 'UNCOMMON');
+  const rareItems = items.filter((i) => i.rarity === 'RARE');
+  const exceptionalItems = items.filter((i) => i.rarity === 'EXCEPTIONAL');
+  const legendaryItems = items.filter((i) => i.rarity === 'LEGENDARY');
+
+  // Стартовый кейс: COMMON (50%), UNCOMMON (35%), RARE (15%)
+  for (const item of commonItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: starterCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: starterCase.id,
+        itemId: item.id,
+        dropChance: 50 / commonItems.length,
+      },
+    });
+  }
+  
+  for (const item of uncommonItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: starterCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: starterCase.id,
+        itemId: item.id,
+        dropChance: 35 / uncommonItems.length,
+      },
+    });
+  }
+  
+  if (rareItems.length > 0) {
+    const rareForStarter = rareItems.slice(0, Math.min(3, rareItems.length));
+    for (const item of rareForStarter) {
+      await prisma.caseItem.upsert({
+        where: {
+          caseId_itemId: {
+            caseId: starterCase.id,
+            itemId: item.id,
+          },
+        },
+        update: {},
+        create: {
+          caseId: starterCase.id,
+          itemId: item.id,
+          dropChance: 15 / rareForStarter.length,
+        },
+      });
+    }
+  }
+
+  // Премиум кейс: UNCOMMON (40%), RARE (35%), EXCEPTIONAL (20%), LEGENDARY (5%)
+  for (const item of uncommonItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: premiumCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: premiumCase.id,
+        itemId: item.id,
+        dropChance: 40 / uncommonItems.length,
+      },
+    });
+  }
+  
+  for (const item of rareItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: premiumCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: premiumCase.id,
+        itemId: item.id,
+        dropChance: 35 / rareItems.length,
+      },
+    });
+  }
+  
+  for (const item of exceptionalItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: premiumCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: premiumCase.id,
+        itemId: item.id,
+        dropChance: 20 / exceptionalItems.length,
+      },
+    });
+  }
+  
+  if (legendaryItems.length > 0) {
+    const legendaryForPremium = legendaryItems.slice(0, Math.min(2, legendaryItems.length));
+    for (const item of legendaryForPremium) {
+      await prisma.caseItem.upsert({
+        where: {
+          caseId_itemId: {
+            caseId: premiumCase.id,
+            itemId: item.id,
+          },
+        },
+        update: {},
+        create: {
+          caseId: premiumCase.id,
+          itemId: item.id,
+          dropChance: 5 / legendaryForPremium.length,
+        },
+      });
+    }
+  }
+
+  // Легендарный кейс: RARE (30%), EXCEPTIONAL (40%), LEGENDARY (30%)
+  for (const item of rareItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: legendaryCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: legendaryCase.id,
+        itemId: item.id,
+        dropChance: 30 / rareItems.length,
+      },
+    });
+  }
+  
+  for (const item of exceptionalItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: legendaryCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: legendaryCase.id,
+        itemId: item.id,
+        dropChance: 40 / exceptionalItems.length,
+      },
+    });
+  }
+  
+  for (const item of legendaryItems) {
+    await prisma.caseItem.upsert({
+      where: {
+        caseId_itemId: {
+          caseId: legendaryCase.id,
+          itemId: item.id,
+        },
+      },
+      update: {},
+      create: {
+        caseId: legendaryCase.id,
+        itemId: item.id,
+        dropChance: 30 / legendaryItems.length,
+      },
+    });
+  }
+
+  console.log('Кейсы созданы с предметами');
+
+  await prisma.promoCode.upsert({
+    where: { code: 'WELCOME100' },
+    update: {},
+    create: {
+      code: 'WELCOME100',
+      type: 'BALANCE',
+      value: 100,
+      maxUses: 1000,
+    },
+  });
+
+  console.log('Промокоды созданы');
+  console.log('Заполнение базы данных завершено!');
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
